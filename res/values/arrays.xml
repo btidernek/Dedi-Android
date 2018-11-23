@@ -4,99 +4,99 @@
   <string-array name="language_entries">
       <item>@string/preferences__default</item>
       <item>English</item>
-      <item>Arabic العربية</item>
-      <item>Bulgarian български</item>
-      <item>Burmese ဗမာစကား</item>
-      <item>Català</item>
-      <item>Čeština</item>
-      <item>Chinese (Simplified) 中文 (简体)</item>
-      <item>Chinese (Traditional) 中文 (繁體)</item>
-      <item>Dansk</item>
-      <item>Deutsch</item>
-      <item>Eesti</item>
-      <item>Español</item>
-      <item>Euskara</item>
-      <item>Français</item>
-      <item>Galego</item>
-      <item>Greek ελληνικά</item>
-      <item>Hebrew עברית</item>
-      <item>Hrvatski</item>
-      <item>Indonesia</item>
-      <item>Italiano</item>
-      <item>Japanese 日本語</item>
-      <item>Khmer ភាសាខ្មែរ</item>
-      <item>Korean 한국어</item>
-      <item>Lietuvių</item>
-      <item>Luganda</item>
-      <item>Magyar</item>
-      <item>Macedonian македонски јазик</item>
-      <item>Nederlands</item>
-      <item>Norsk (bokmål)</item>
-      <item>Norsk (nynorsk)</item>
-      <item>Persian فارسی</item>
-      <item>Polski</item>
-      <item>Português</item>
-      <item>Português do Brasil</item>
-      <item>Română</item>
-      <item>Russian Pусский</item>
-      <item>Serbian српски</item>
-      <item>Shqip</item>
-      <item>Slovenščina</item>
-      <item>Slovenský</item>
-      <item>Suomi</item>
-      <item>Svenska</item>
-      <item>Thai ภาษาไทย</item>
+      <!--<item>Arabic العربية</item>-->
+      <!--<item>Bulgarian български</item>-->
+      <!--<item>Burmese ဗမာစကား</item>-->
+      <!--<item>Català</item>-->
+      <!--<item>Čeština</item>-->
+      <!--<item>Chinese (Simplified) 中文 (简体)</item>-->
+      <!--<item>Chinese (Traditional) 中文 (繁體)</item>-->
+      <!--<item>Dansk</item>-->
+      <!--<item>Deutsch</item>-->
+      <!--<item>Eesti</item>-->
+      <!--<item>Español</item>-->
+      <!--<item>Euskara</item>-->
+      <!--<item>Français</item>-->
+      <!--<item>Galego</item>-->
+      <!--<item>Greek ελληνικά</item>-->
+      <!--<item>Hebrew עברית</item>-->
+      <!--<item>Hrvatski</item>-->
+      <!--<item>Indonesia</item>-->
+      <!--<item>Italiano</item>-->
+      <!--<item>Japanese 日本語</item>-->
+      <!--<item>Khmer ភាសាខ្មែរ</item>-->
+      <!--<item>Korean 한국어</item>-->
+      <!--<item>Lietuvių</item>-->
+      <!--<item>Luganda</item>-->
+      <!--<item>Magyar</item>-->
+      <!--<item>Macedonian македонски јазик</item>-->
+      <!--<item>Nederlands</item>-->
+      <!--<item>Norsk (bokmål)</item>-->
+      <!--<item>Norsk (nynorsk)</item>-->
+      <!--<item>Persian فارسی</item>-->
+      <!--<item>Polski</item>-->
+      <!--<item>Português</item>-->
+      <!--<item>Português do Brasil</item>-->
+      <!--<item>Română</item>-->
+      <!--<item>Russian Pусский</item>-->
+      <!--<item>Serbian српски</item>-->
+      <!--<item>Shqip</item>-->
+      <!--<item>Slovenščina</item>-->
+      <!--<item>Slovenský</item>-->
+      <!--<item>Suomi</item>-->
+      <!--<item>Svenska</item>-->
+      <!--<item>Thai ภาษาไทย</item>-->
       <item>Türkçe</item>
-      <item>Vietnamese Tiếng Việt</item>
+      <!--<item>Vietnamese Tiếng Việt</item>-->
   </string-array>
 
   <string-array name="language_values">
       <item>zz</item>
       <item>en</item>
-      <item>ar</item>
-      <item>bg</item>
-      <item>my</item>
-      <item>ca</item>
-      <item>cs</item>
-      <item>zh_CN</item>
-      <item>zh_TW</item>
-      <item>da</item>
-      <item>de</item>
-      <item>et</item>
-      <item>es</item>
-      <item>eu</item>
-      <item>fr</item>
-      <item>gl</item>
-      <item>el</item>
-      <item>iw</item>
-      <item>hr</item>
-      <item>in</item>
-      <item>it</item>
-      <item>ja</item>
-      <item>km_KH</item>
-      <item>ko</item>
-      <item>lt</item>
-      <item>lg</item>
-      <item>hu</item>
-      <item>mk</item>
-      <item>nl</item>
-      <item>nb</item>
-      <item>nn</item>
-      <item>fa</item>
-      <item>pl</item>
-      <item>pt</item>
-      <item>pt_BR</item>
-      <item>ro</item>
-      <item>ru</item>
-      <item>sr</item>
-      <item>sq</item>
-      <item>sl</item>
-      <item>sk</item>
-      <item>fi</item>
-      <item>sv</item>
-      <item>th</item>
+      <!--<item>ar</item>-->
+      <!--<item>bg</item>-->
+      <!--<item>my</item>-->
+      <!--<item>ca</item>-->
+      <!--<item>cs</item>-->
+      <!--<item>zh_CN</item>-->
+      <!--<item>zh_TW</item>-->
+      <!--<item>da</item>-->
+      <!--<item>de</item>-->
+      <!--<item>et</item>-->
+      <!--<item>es</item>-->
+      <!--<item>eu</item>-->
+      <!--<item>fr</item>-->
+      <!--<item>gl</item>-->
+      <!--<item>el</item>-->
+      <!--<item>iw</item>-->
+      <!--<item>hr</item>-->
+      <!--<item>in</item>-->
+      <!--<item>it</item>-->
+      <!--<item>ja</item>-->
+      <!--<item>km_KH</item>-->
+      <!--<item>ko</item>-->
+      <!--<item>lt</item>-->
+      <!--<item>lg</item>-->
+      <!--<item>hu</item>-->
+      <!--<item>mk</item>-->
+      <!--<item>nl</item>-->
+      <!--<item>nb</item>-->
+      <!--<item>nn</item>-->
+      <!--<item>fa</item>-->
+      <!--<item>pl</item>-->
+      <!--<item>pt</item>-->
+      <!--<item>pt_BR</item>-->
+      <!--<item>ro</item>-->
+      <!--<item>ru</item>-->
+      <!--<item>sr</item>-->
+      <!--<item>sq</item>-->
+      <!--<item>sl</item>-->
+      <!--<item>sk</item>-->
+      <!--<item>fi</item>-->
+      <!--<item>sv</item>-->
+      <!--<item>th</item>-->
       <item>tr</item>
-      <item>vi</item>
+      <!--<item>vi</item>-->
   </string-array>
 
     <string-array name="pref_theme_entries">
@@ -273,15 +273,11 @@
     </integer-array>
 
     <array name="scribble_colors">
-        <item>#ffffff</item>
-        <item>#ff0000</item>
-        <item>#ff00ff</item>
-        <item>#0000ff</item>
-        <item>#00ffff</item>
-        <item>#00ff00</item>
-        <item>#ffff00</item>
-        <item>#ff5500</item>
         <item>#000000</item>
+        <item>#ff0000</item>
+        <item>#ffff00</item>
+        <item>#00ffff</item>
+        <item>#ff00ff</item>
     </array>
 
     <string-array name="pref_message_font_size_entries">
@@ -296,6 +292,20 @@
         <item>16</item>
         <item>20</item>
         <item>30</item>
+    </string-array>
+
+    <string-array name="pref_media_size_entries">
+        <item>@string/arrays_media_low</item>
+        <item>@string/arrays_media_normal</item>
+        <item>@string/arrays_media_high</item>
+        <item>@string/arrays_media_original</item>
+    </string-array>
+
+    <string-array name="pref_media_size_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
     </string-array>
 
     <string-array name="pref_notification_priority_entries">

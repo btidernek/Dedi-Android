@@ -210,7 +210,7 @@
         <attr name="documentForegroundTintColor" format="color" />
         <attr name="documentBackgroundTintColor" format="color" />
     </declare-styleable>
-    
+
     <declare-styleable name="EmojiTextView">
         <attr name="scaleEmojis" format="boolean" />
     </declare-styleable>

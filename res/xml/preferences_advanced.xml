@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+    <org.btider.dediapp.components.SwitchPreferenceCompat
                         android:defaultValue="false"
                         android:key="pref_toggle_push_messaging"
                         android:title="@string/preferences__signal_messages_and_calls"
@@ -11,6 +11,11 @@
                 android:title="@string/preferences__choose_identity"
                 android:summary="@string/preferences__choose_your_contact_entry_from_the_contacts_list"/>
 
-    <Preference android:key="pref_submit_debug_logs"
-                android:title="@string/preferences__submit_debug_log"/>
+    <Preference android:key="versioncontrol"
+        android:title="Version"
+        android:summary="@string/version"/>
+
+    <!--  TODO hata ayıklama kaydı gönder kısmı için çalışan xml  -->
+    <!--<Preference android:key="pref_submit_debug_logs"-->
+                <!--android:title="@string/preferences__submit_debug_log"/>-->
 </PreferenceScreen>

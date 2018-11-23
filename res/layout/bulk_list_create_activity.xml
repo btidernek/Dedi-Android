@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/relative_layout_head"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:id="@+id/creating_group_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="106dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="18dp"
+            android:paddingRight="18dp"
+            android:paddingTop="18dp"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:id="@+id/creating_progress_bar"
+                style="@android:style/Widget.ProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:indeterminate="true" />
+
+            <org.btider.dediapp.components.emoji.EmojiTextView
+                android:id="@+id/creating_group_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:padding="10dp"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/push_disabled"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#aa000000"
+            android:gravity="center_vertical|center_horizontal"
+            android:minHeight="106dp"
+            android:padding="15dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/push_disabled_reason"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="#dd222222"
+                android:fontFamily="sans-serif-light"
+                android:padding="8dp"
+                android:text="@string/GroupCreateActivity_contacts_dont_support_push"
+                android:textColor="#ffeeeeee"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <org.btider.dediapp.components.PushRecipientsPanel
+        android:id="@+id/recipients"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp" />
+
+    <ListView android:id="@+id/selected_contacts_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

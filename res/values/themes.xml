@@ -368,12 +368,9 @@
         <item name="search_background">@color/black</item>
         <item name="invite_background">@color/black</item>
     </style>
-    
+
     <style name="RationaleDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowBackground">@drawable/permission_rationale_dialog_corners</item>
-    </style>
-
-    <style name="TextSecure.ScribbleTheme" parent="TextSecure.DarkNoActionBar">
     </style>
 
 </resources>

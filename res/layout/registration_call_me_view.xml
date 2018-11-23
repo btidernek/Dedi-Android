@@ -3,25 +3,29 @@
        xmlns:tools="http://schemas.android.com/tools"
        tools:parentTag="android.widget.RelativeLayout">
 
-    <ImageView android:id="@+id/phone_icon"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_alignParentStart="true"
-               android:layout_alignParentLeft="true"
-               android:layout_centerVertical="true"
-               android:src="@drawable/ic_phone_grey600_32dp"/>
+    <ImageView
+        android:id="@+id/phone_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_phone_grey600_32dp"
+        android:visibility="invisible" />
 
-    <TextView android:id="@+id/call_me_text"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_toRightOf="@id/phone_icon"
-              android:layout_toEndOf="@id/phone_icon"
-              android:layout_centerVertical="true"
-              android:layout_marginStart="10dp"
-              android:layout_marginLeft="10dp"
-              android:gravity="center_vertical"
-              android:textSize="16sp"
-              android:text="@string/RegistrationActivity_call_me_instead"/>
+    <TextView
+        android:id="@+id/call_me_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@id/phone_icon"
+        android:layout_toRightOf="@id/phone_icon"
+        android:gravity="center_vertical"
+        android:text="@string/RegistrationActivity_call_me_instead"
+        android:textSize="16sp"
+        android:visibility="invisible" />
 
     <TextView android:id="@+id/available_in_text"
               android:layout_width="wrap_content"

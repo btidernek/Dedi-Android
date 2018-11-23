@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/reminder_background_normal"
+    android:background="@drawable/reminder_background"
     android:focusable="true"
     android:nextFocusRight="@+id/cancel"
     android:orientation="horizontal"
@@ -27,7 +27,7 @@
             android:layout_marginBottom="4dp"
             android:textColor="@color/white"
             android:textSize="18sp"
-            tools:text="Invite to Signal"/>
+            tools:text="Invite to Dedi"/>
 
         <TextView
             android:id="@+id/reminder_text"

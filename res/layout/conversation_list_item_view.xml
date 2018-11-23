@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.thoughtcrime.securesms.ConversationListItem
+<org.btider.dediapp.ConversationListItem
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -10,23 +10,23 @@
         android:nextFocusLeft="@+id/container"
         android:layout_height="75dp">
 
-    <org.thoughtcrime.securesms.components.AvatarImageView
+    <org.btider.dediapp.components.AvatarImageView
         android:id="@+id/contact_photo_image"
-        android:foreground="@drawable/contact_photo_background"
         android:layout_width="54dp"
         android:layout_height="54dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginTop="3dp"
         android:layout_marginBottom="3dp"
-        android:cropToPadding="true"
-        tools:src="@drawable/ic_contact_picture"
-        android:contentDescription="@string/conversation_list_item_view__contact_photo_image"
-        android:layout_marginRight="10dp"
         android:layout_marginEnd="10dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="10dp"
         android:layout_marginStart="14dp"
-        android:layout_marginLeft="14dp" />
+        android:layout_marginTop="3dp"
+        android:contentDescription="@string/conversation_list_item_view__contact_photo_image"
+        android:cropToPadding="true"
+        android:foreground="@drawable/contact_photo_background"
+        tools:src="@drawable/ic_contact_picture" />
 
     <RelativeLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
                   android:weightSum="1"
                   android:orientation="horizontal">
 
-        <org.thoughtcrime.securesms.components.FromTextView
+        <org.btider.dediapp.components.FromTextView
                   android:id="@+id/from"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
                   android:layout_marginBottom="2dp"
                   android:drawablePadding="5dp"/>
 
-        <org.thoughtcrime.securesms.components.AlertView
+        <org.btider.dediapp.components.AlertView
                 android:id="@+id/indicators_parent"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
@@ -71,7 +71,7 @@
                 android:visibility="gone"
                 tools:visibility="visible"/>
 
-        <org.thoughtcrime.securesms.components.emoji.EmojiTextView
+        <org.btider.dediapp.components.emoji.EmojiTextView
                 android:id="@+id/subject"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
                 tools:text="Wheels arrive at 3pm flat. This is a somewhat longer message."
                 android:ellipsize="end" />
 
-        <org.thoughtcrime.securesms.components.ThumbnailView
+        <org.btider.dediapp.components.ThumbnailView
                 android:id="@+id/thumbnail"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -144,7 +144,7 @@
                      android:layout_toStartOf="@id/archived"
                      android:layout_alignWithParentIfMissing="true">
 
-            <org.thoughtcrime.securesms.components.DeliveryStatusView
+            <org.btider.dediapp.components.DeliveryStatusView
                     android:id="@+id/delivery_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -158,4 +158,4 @@
 
 
     </RelativeLayout>
-</org.thoughtcrime.securesms.ConversationListItem>
+</org.btider.dediapp.ConversationListItem>

@@ -7,57 +7,62 @@
               android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/relative_layout_head"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:gravity="center_vertical">
 
-        <LinearLayout android:id="@+id/group_details_layout"
+        <LinearLayout
+            android:id="@+id/group_details_layout"
             android:layout_width="fill_parent"
             android:layout_height="106dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:paddingLeft="14dp"
             android:paddingRight="18dp"
-            android:paddingTop="14dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:paddingTop="14dp">
 
-            <org.thoughtcrime.securesms.components.ImageDivet android:id="@+id/avatar"
+            <org.btider.dediapp.components.ImageDivet
+                android:id="@+id/avatar"
+                position="bottom_right"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                position="bottom_right"
                 android:layout_marginRight="10dp"
                 android:contentDescription="@string/GroupCreateActivity_avatar_content_description" />
 
-            <org.thoughtcrime.securesms.components.emoji.EmojiEditText
+            <org.btider.dediapp.components.emoji.EmojiEditText
                 android:id="@+id/group_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:padding="10dp"
+                android:hint="@string/GroupCreateActivity_group_name_hint"
+                android:inputType="textAutoCorrect"
                 android:lines="1"
                 android:maxLength="255"
-                android:inputType="textAutoCorrect"
-                android:hint="@string/GroupCreateActivity_group_name_hint" />
-            </LinearLayout>
+                android:padding="10dp" />
+        </LinearLayout>
 
-        <LinearLayout android:id="@+id/creating_group_layout"
+        <LinearLayout
+            android:id="@+id/creating_group_layout"
             android:layout_width="fill_parent"
             android:layout_height="106dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:paddingLeft="18dp"
             android:paddingRight="18dp"
             android:paddingTop="18dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
             android:visibility="gone">
 
-            <ProgressBar android:id="@+id/creating_progress_bar"
+            <ProgressBar
+                android:id="@+id/creating_progress_bar"
+                style="@android:style/Widget.ProgressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                style="@android:style/Widget.ProgressBar"
                 android:indeterminate="true" />
 
-            <org.thoughtcrime.securesms.components.emoji.EmojiTextView
+            <org.btider.dediapp.components.emoji.EmojiTextView
                 android:id="@+id/creating_group_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -66,30 +71,32 @@
                 android:textAppearance="?android:attr/textAppearanceMedium" />
         </LinearLayout>
 
-        <RelativeLayout android:id="@+id/push_disabled"
+        <RelativeLayout
+            android:id="@+id/push_disabled"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:background="#aa000000"
+            android:gravity="center_vertical|center_horizontal"
             android:minHeight="106dp"
             android:padding="15dp"
-            android:gravity="center_vertical|center_horizontal"
-            android:background="#aa000000"
             android:visibility="gone">
 
-            <TextView android:id="@+id/push_disabled_reason"
+            <TextView
+                android:id="@+id/push_disabled_reason"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:padding="8dp"
                 android:background="#dd222222"
-                android:textColor="#ffeeeeee"
                 android:fontFamily="sans-serif-light"
-                android:textSize="16sp"
-                android:text="@string/GroupCreateActivity_contacts_dont_support_push" />
+                android:padding="8dp"
+                android:text="@string/GroupCreateActivity_contacts_dont_support_push"
+                android:textColor="#ffeeeeee"
+                android:textSize="16sp" />
 
-            </RelativeLayout>
+        </RelativeLayout>
     </RelativeLayout>
 
-    <org.thoughtcrime.securesms.components.PushRecipientsPanel android:id="@+id/recipients"
+    <org.btider.dediapp.components.PushRecipientsPanel android:id="@+id/recipients"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="15dp"

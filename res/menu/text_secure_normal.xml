@@ -7,17 +7,33 @@
     <item android:title="@string/text_secure_normal__menu_clear_passphrase"
           android:id="@+id/menu_clear_passphrase" />
 
+    <item android:title="@string/text_secure_normal__mark_bulk_message_send"
+        android:id="@+id/menu_bulk_message_send" />
+
     <item android:title="@string/text_secure_normal__mark_all_as_read"
           android:id="@+id/menu_mark_all_read" />
-
-    <item android:title="@string/text_secure_normal__invite_friends"
-          android:id="@+id/menu_invite" />
 
     <item android:title="@string/arrays__import_export"
           android:id="@+id/menu_import_export" />
 
     <item android:title="@string/text_secure_normal__menu_settings"
           android:id="@+id/menu_settings" />
+
+    <item android:title="@string/text_secure_menu_comment_title">
+        <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <item android:title="@string/text_secure_comment_inapp"
+            android:id="@+id/menu_comment_inapp" />
+
+        <item android:title="@string/text_secure_comment_store_rate"
+            android:id="@+id/menu_comment_store_rate" />
+
+        <item android:title="@string/text_secure_normal__invite_friends"
+            android:id="@+id/menu_invite" />
+
+
+        </menu>
+    </item>
 
     <item android:title="@string/text_secure_normal__help"
           android:id="@+id/menu_help"/>

@@ -12,4 +12,10 @@
           android:icon="?menu_selectall_icon"
           app:showAsAction="always"/>
 
+
+    <item android:title="@string/text_secure_normal__mark_message_as_unread"
+            android:id="@+id/menu_mark_message_unread" />
+
+
+
 </menu>

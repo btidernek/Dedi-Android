@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<org.thoughtcrime.securesms.components.InputAwareLayout
+<org.btider.dediapp.components.InputAwareLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-<org.thoughtcrime.securesms.components.camera.QuickAttachmentDrawer
+<org.btider.dediapp.components.camera.QuickAttachmentDrawer
         android:id="@+id/quick_attachment_drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -28,6 +28,18 @@
                   android:inflatedId="@+id/group_share_profile_view"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"/>
+
+        <ViewStub android:id="@+id/information_security_info_title_stub"
+            android:layout="@layout/conversation_activity_security_info_stub"
+            android:inflatedId="@+id/information_security_info_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <ViewStub android:id="@+id/info_title_stub"
+            android:layout="@layout/conversation_activity_info_stub"
+            android:inflatedId="@+id/information_info_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
         <ViewStub android:id="@+id/unverified_banner_stub"
                   android:layout="@layout/conversation_activity_unverified_banner_stub"
@@ -94,5 +106,5 @@
                 android:layout_height="wrap_content"/>
 
     </LinearLayout>
-</org.thoughtcrime.securesms.components.camera.QuickAttachmentDrawer>
-</org.thoughtcrime.securesms.components.InputAwareLayout>
+</org.btider.dediapp.components.camera.QuickAttachmentDrawer>
+</org.btider.dediapp.components.InputAwareLayout>
