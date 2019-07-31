@@ -69,11 +69,13 @@ public class ConversationUpdateItem extends LinearLayout
   public void onFinishInflate() {
     super.onFinishInflate();
 
-    this.icon = findViewById(R.id.conversation_update_icon);
-    this.body = findViewById(R.id.conversation_update_body);
-    this.date = findViewById(R.id.conversation_update_date);
 
-    this.setOnClickListener(new InternalClickListener(null));
+      this.icon = findViewById(R.id.conversation_update_icon);
+      this.body = findViewById(R.id.conversation_update_body);
+      this.date = findViewById(R.id.conversation_update_date);
+
+      this.setOnClickListener(new InternalClickListener(null));
+
   }
 
   @Override
@@ -106,18 +108,23 @@ public class ConversationUpdateItem extends LinearLayout
 
     this.sender.addListener(this);
 
-    if      (messageRecord.isGroupAction())           setGroupRecord(messageRecord);
-    else if (messageRecord.isCallLog())               setCallRecord(messageRecord);
-    else if (messageRecord.isJoined())                setJoinedRecord(messageRecord);
-    else if (messageRecord.isExpirationTimerUpdate()) setTimerRecord(messageRecord);
-    else if (messageRecord.isEndSession())            setEndSessionRecord(messageRecord);
-    else if (messageRecord.isIdentityUpdate())        setIdentityRecord(messageRecord);
-    else if (messageRecord.isIdentityVerified() ||
-             messageRecord.isIdentityDefault())       setIdentityVerifyUpdate(messageRecord);
-    else                                              throw new AssertionError("Neither group nor log nor joined.");
+    if(!messageRecord.getRecipient().isOnlyRead()){
+      icon.setVisibility(VISIBLE);
+      if      (messageRecord.isGroupAction())           setGroupRecord(messageRecord);
+      else if (messageRecord.isCallLog())               setCallRecord(messageRecord);
+      else if (messageRecord.isJoined())                setJoinedRecord(messageRecord);
+      else if (messageRecord.isExpirationTimerUpdate()) setTimerRecord(messageRecord);
+      else if (messageRecord.isEndSession())            setEndSessionRecord(messageRecord);
+      else if (messageRecord.isIdentityUpdate())        setIdentityRecord(messageRecord);
+      else if (messageRecord.isIdentityVerified() ||
+               messageRecord.isIdentityDefault())       setIdentityVerifyUpdate(messageRecord);
+      else                                              throw new AssertionError("Neither group nor log nor joined.");
 
-    if (batchSelected.contains(messageRecord)) setSelected(true);
-    else                                       setSelected(false);
+      if (batchSelected.contains(messageRecord)) setSelected(true);
+      else                                       setSelected(false);
+    }else{
+      icon.setVisibility(GONE);
+    }
   }
 
   private void setCallRecord(MessageRecord messageRecord) {
@@ -144,10 +151,10 @@ public class ConversationUpdateItem extends LinearLayout
   }
 
   private void setIdentityRecord(final MessageRecord messageRecord) {
-    icon.setImageResource(R.drawable.ic_security_white_24dp);
-    icon.setColorFilter(new PorterDuffColorFilter(Color.parseColor("#757575"), PorterDuff.Mode.MULTIPLY));
-    body.setText(messageRecord.getDisplayBody());
-    date.setVisibility(View.GONE);
+      icon.setImageResource(R.drawable.ic_security_white_24dp);
+      icon.setColorFilter(new PorterDuffColorFilter(Color.parseColor("#757575"), PorterDuff.Mode.MULTIPLY));
+      body.setText(messageRecord.getDisplayBody());
+      date.setVisibility(View.GONE);
   }
 
   private void setIdentityVerifyUpdate(final MessageRecord messageRecord) {

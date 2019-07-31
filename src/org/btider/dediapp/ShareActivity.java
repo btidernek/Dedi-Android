@@ -302,8 +302,10 @@ public class ShareActivity extends PassphraseRequiredActionBarActivity
   @Override
   public void onContactSelected(String number) {
     Recipient recipient = Recipient.from(this, Address.fromExternal(this, number), true);
+    //MUHTAR
+    if(recipient.isOnlyRead())
+      return;
     long existingThread = DatabaseFactory.getThreadDatabase(this).getThreadIdIfExistsFor(recipient);
-    System.out.println("------:how:"+existingThread);
     createConversation(existingThread, recipient.getAddress(), ThreadDatabase.DistributionTypes.DEFAULT);
   }
 

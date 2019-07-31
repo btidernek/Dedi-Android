@@ -3,6 +3,8 @@ package org.btider.dediapp.dependencies;
 import android.content.Context;
 import android.util.Log;
 
+import org.btider.dediapp.gcm.FcmService;
+import org.btider.dediapp.jobs.FcmRefreshJob;
 import org.greenrobot.eventbus.EventBus;
 
 import org.btider.dediapp.crypto.storage.SignalProtocolStoreImpl;
@@ -98,7 +100,7 @@ import dagger.Provides;
                                      MultiDeviceBlockedUpdateJob.class,
                                      DeviceListFragment.class,
                                      RefreshAttributesJob.class,
-                                     GcmRefreshJob.class,
+                                     FcmRefreshJob.class,
                                      RequestGroupInfoJob.class,
                                      PushGroupUpdateJob.class,
                                      AvatarDownloadJob.class,
@@ -111,6 +113,7 @@ import dagger.Provides;
                                      MultiDeviceProfileKeyUpdateJob.class,
                                      SendReadReceiptJob.class,
                                      MultiDeviceReadReceiptUpdateJob.class,
+                                     FcmService.class,
                                      AppProtectionPreferenceFragment.class})
 public class SignalCommunicationModule {
 

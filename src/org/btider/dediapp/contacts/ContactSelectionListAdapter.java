@@ -42,6 +42,7 @@ import org.btider.dediapp.database.Address;
 import org.btider.dediapp.database.CursorRecyclerViewAdapter;
 import org.btider.dediapp.mms.GlideRequests;
 import org.btider.dediapp.util.StickyHeaderDecoration.StickyHeaderAdapter;
+import org.btider.dediapp.util.TextSecurePreferences;
 import org.btider.dediapp.util.Util;
 
 import java.util.HashSet;
@@ -174,6 +175,7 @@ public class ContactSelectionListAdapter extends CursorRecyclerViewAdapter<ViewH
 
   @Override
   public void onBindItemViewHolder(ViewHolder viewHolder, @NonNull Cursor cursor) {
+
     int    contactType = cursor.getInt(cursor.getColumnIndexOrThrow(ContactsDatabase.CONTACT_TYPE_COLUMN));
     String name        = cursor.getString(cursor.getColumnIndexOrThrow(ContactsDatabase.NAME_COLUMN));
     String number      = cursor.getString(cursor.getColumnIndexOrThrow(ContactsDatabase.NUMBER_COLUMN));
@@ -182,12 +184,20 @@ public class ContactSelectionListAdapter extends CursorRecyclerViewAdapter<ViewH
     String labelText   = ContactsContract.CommonDataKinds.Phone.getTypeLabel(getContext().getResources(),
                                                                              numberType, label).toString();
 
+
     int color = (contactType == ContactsDatabase.PUSH_TYPE) ? drawables.getColor(0, 0xa0000000) :
                 drawables.getColor(1, 0xff000000);
 
     viewHolder.unbind(glideRequests);
     viewHolder.bind(glideRequests, contactType, name, number, labelText, color, multiSelect);
     viewHolder.setChecked(selectedContacts.contains(number));
+
+//    String ss = TextSecurePreferences.getServiceProductPreferencee(getContext(), number, null);
+//    if(ss != null){
+//      viewHolder.itemView.setVisibility(View.GONE);
+//      viewHolder.itemView.setSystemUiVisibility(View.GONE);
+//    }
+
   }
 
   @Override

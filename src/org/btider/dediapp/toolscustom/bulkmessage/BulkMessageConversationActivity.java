@@ -27,7 +27,6 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.ColorDrawable;
@@ -38,11 +37,9 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.provider.Browser;
 import android.provider.ContactsContract;
-import android.provider.MediaStore;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.WindowCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -53,7 +50,6 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -68,18 +64,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.protobuf.ByteString;
 
 import org.btider.dediapp.ApplicationContext;
 import org.btider.dediapp.ConversationFragment;
-import org.btider.dediapp.ConversationListActivity;
-import org.btider.dediapp.ConversationListArchiveActivity;
-import org.btider.dediapp.ConversationTitleView;
-import org.btider.dediapp.ExpirationDialog;
 import org.btider.dediapp.GroupCreateActivity;
-import org.btider.dediapp.GroupMembersDialog;
-import org.btider.dediapp.MediaOverviewActivity;
-import org.btider.dediapp.MuteDialog;
 import org.btider.dediapp.PassphraseRequiredActionBarActivity;
 import org.btider.dediapp.PromptMmsActivity;
 import org.btider.dediapp.R;
@@ -137,8 +125,6 @@ import org.btider.dediapp.mms.GlideApp;
 import org.btider.dediapp.mms.GlideRequests;
 import org.btider.dediapp.mms.LocationSlide;
 import org.btider.dediapp.mms.MediaConstraints;
-import org.btider.dediapp.mms.OutgoingExpirationUpdateMessage;
-import org.btider.dediapp.mms.OutgoingGroupMediaMessage;
 import org.btider.dediapp.mms.OutgoingMediaMessage;
 import org.btider.dediapp.mms.OutgoingSecureMediaMessage;
 import org.btider.dediapp.mms.QuoteId;
@@ -159,17 +145,11 @@ import org.btider.dediapp.scribbles.ScribbleActivity;
 import org.btider.dediapp.service.KeyCachingService;
 import org.btider.dediapp.sms.MessageSender;
 import org.btider.dediapp.sms.OutgoingEncryptedMessage;
-import org.btider.dediapp.sms.OutgoingEndSessionMessage;
 import org.btider.dediapp.sms.OutgoingTextMessage;
-import org.btider.dediapp.toolscustom.MessageEmailSender;
 import org.btider.dediapp.util.CharacterCalculator;
-import org.btider.dediapp.util.CommunicationActions;
-import org.btider.dediapp.util.Dialogs;
 import org.btider.dediapp.util.DirectoryHelper;
 import org.btider.dediapp.util.DynamicLanguage;
 import org.btider.dediapp.util.DynamicTheme;
-import org.btider.dediapp.util.ExpirationUtil;
-import org.btider.dediapp.util.GroupUtil;
 import org.btider.dediapp.util.IdentityUtil;
 import org.btider.dediapp.util.MediaUtil;
 import org.btider.dediapp.util.ServiceUtil;
@@ -204,7 +184,6 @@ import static org.btider.dediapp.TransportOption.Type;
 import static org.btider.dediapp.util.TextSecurePreferences.PREF_MEDIA_SIZE;
 import static org.btider.dediapp.util.TextSecurePreferences.getBooleanPreference;
 import static org.whispersystems.libsignal.SessionCipher.SESSION_LOCK;
-import static org.whispersystems.signalservice.internal.push.SignalServiceProtos.GroupContext;
 
 //import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
@@ -255,7 +234,7 @@ public class BulkMessageConversationActivity extends PassphraseRequiredActionBar
     private TextView charactersLeft;
     private ConversationFragment fragment;
     private Button unblockButton;
-    private Button makeDefaultSmsButton;
+    //private Button makeDefaultSmsButton;
     private Button registerButton;
     private InputAwareLayout container;
     private View composePanel;
@@ -1097,7 +1076,7 @@ public class BulkMessageConversationActivity extends PassphraseRequiredActionBar
         charactersLeft = ViewUtil.findById(this, R.id.space_left);
         emojiDrawerStub = ViewUtil.findStubById(this, R.id.emoji_drawer_stub);
         unblockButton = ViewUtil.findById(this, R.id.unblock_button);
-        makeDefaultSmsButton = ViewUtil.findById(this, R.id.make_default_sms_button);
+//        makeDefaultSmsButton = ViewUtil.findById(this, R.id.make_default_sms_button);
         registerButton = ViewUtil.findById(this, R.id.register_button);
         composePanel = ViewUtil.findById(this, R.id.bottom_panel);
         container = ViewUtil.findById(this, R.id.layout_container);
@@ -1149,7 +1128,7 @@ public class BulkMessageConversationActivity extends PassphraseRequiredActionBar
         titleView.setOnLongClickListener(v -> handleDisplayQuickContact());
         titleView.setOnBackClickedListener(view -> super.onBackPressed());
         unblockButton.setOnClickListener(v -> handleUnblock());
-        makeDefaultSmsButton.setOnClickListener(v -> handleMakeDefaultSms());
+        //makeDefaultSmsButton.setOnClickListener(v -> handleMakeDefaultSms());
         registerButton.setOnClickListener(v -> handleRegisterForSignal());
 
         composeText.setOnKeyListener(composeKeyPressedListener);
@@ -1472,22 +1451,22 @@ public class BulkMessageConversationActivity extends PassphraseRequiredActionBar
         if (recipient.isBlocked()) {
             unblockButton.setVisibility(View.VISIBLE);
             composePanel.setVisibility(View.GONE);
-            makeDefaultSmsButton.setVisibility(View.GONE);
+            //makeDefaultSmsButton.setVisibility(View.GONE);
             registerButton.setVisibility(View.GONE);
         } else if (!isSecureText && isPushGroupConversation()) {
             unblockButton.setVisibility(View.GONE);
             composePanel.setVisibility(View.GONE);
-            makeDefaultSmsButton.setVisibility(View.GONE);
+//            makeDefaultSmsButton.setVisibility(View.GONE);
             registerButton.setVisibility(View.VISIBLE);
         } else if (!isSecureText && !isDefaultSms) {
             unblockButton.setVisibility(View.GONE);
             composePanel.setVisibility(View.GONE);
-            makeDefaultSmsButton.setVisibility(View.VISIBLE);
+//            makeDefaultSmsButton.setVisibility(View.VISIBLE);
             registerButton.setVisibility(View.GONE);
         } else {
             composePanel.setVisibility(View.VISIBLE);
             unblockButton.setVisibility(View.GONE);
-            makeDefaultSmsButton.setVisibility(View.GONE);
+//            makeDefaultSmsButton.setVisibility(View.GONE);
             registerButton.setVisibility(View.GONE);
         }
     }
@@ -1758,35 +1737,24 @@ public class BulkMessageConversationActivity extends PassphraseRequiredActionBar
             outgoingMessage = outgoingMessageCandidate;
         }
 
-        Permissions.with(this)
-                .request(Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS)
-                .ifNecessary(!isSecureText || forceSms)
-                .withPermanentDenialDialog(getString(R.string.ConversationActivity_signal_needs_sms_permission_in_order_to_send_an_sms))
-                .onAllGranted(() -> {
-                    //inputPanel.clearQuote();
-                    //attachmentManager.clear(glideRequests, false);
-                    //composeText.setText("");
-                    final long id = fragment.stageOutgoingMessage(outgoingMessage);
+        final long id = fragment.stageOutgoingMessage(outgoingMessage);
 
-                    new AsyncTask<Void, Void, Long>() {
-                        @Override
-                        protected Long doInBackground(Void... param) {
-                            if (initiating) {
-                                DatabaseFactory.getRecipientDatabase(context).setProfileSharing(recipient, true);
-                            }
+        new AsyncTask<Void, Void, Long>() {
+            @Override
+            protected Long doInBackground(Void... param) {
+                if (initiating) {
+                    DatabaseFactory.getRecipientDatabase(context).setProfileSharing(recipient, true);
+                }
 
-                            return MessageSender.send(context, outgoingMessage, threadId, forceSms, () -> fragment.releaseOutgoingMessage(id));
-                        }
+                return MessageSender.send(context, outgoingMessage, threadId, forceSms, () -> fragment.releaseOutgoingMessage(id));
+            }
 
-                        @Override
-                        protected void onPostExecute(Long result) {
-                            sendComplete(result);
-                            future.set(null);
-                        }
-                    }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                })
-                .onAnyDenied(() -> future.set(null))
-                .execute();
+            @Override
+            protected void onPostExecute(Long result) {
+                sendComplete(result);
+                future.set(null);
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         return future;
     }
@@ -1804,32 +1772,23 @@ public class BulkMessageConversationActivity extends PassphraseRequiredActionBar
             message = new OutgoingTextMessage(recipient, messageBody, expiresIn, subscriptionId);
         }
 
-        Permissions.with(this)
-                .request(Manifest.permission.SEND_SMS)
-                .ifNecessary(forceSms || !isSecureText)
-                .withPermanentDenialDialog(getString(R.string.ConversationActivity_signal_needs_sms_permission_in_order_to_send_an_sms))
-                .onAllGranted(() -> {
-                    //this.composeText.setText("");
-                    final long id = fragment.stageOutgoingMessage(message);
+        final long id = fragment.stageOutgoingMessage(message);
 
-                    new AsyncTask<OutgoingTextMessage, Void, Long>() {
-                        @Override
-                        protected Long doInBackground(OutgoingTextMessage... messages) {
-                            if (initiatingConversation) {
-                                DatabaseFactory.getRecipientDatabase(context).setProfileSharing(recipient, true);
-                            }
+        new AsyncTask<OutgoingTextMessage, Void, Long>() {
+            @Override
+            protected Long doInBackground(OutgoingTextMessage... messages) {
+                if (initiatingConversation) {
+                    DatabaseFactory.getRecipientDatabase(context).setProfileSharing(recipient, true);
+                }
 
-                            return MessageSender.send(context, messages[0], threadId, forceSms, () -> fragment.releaseOutgoingMessage(id));
-                        }
+                return MessageSender.send(context, messages[0], threadId, forceSms, () -> fragment.releaseOutgoingMessage(id));
+            }
 
-                        @Override
-                        protected void onPostExecute(Long result) {
-                            sendComplete(result);
-                        }
-                    }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, message);
-
-                })
-                .execute();
+            @Override
+            protected void onPostExecute(Long result) {
+                sendComplete(result);
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, message);
     }
 
     private void updateToggleButtonState() {

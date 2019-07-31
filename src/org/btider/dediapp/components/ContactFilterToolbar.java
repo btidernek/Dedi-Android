@@ -18,139 +18,139 @@ import org.btider.dediapp.util.ServiceUtil;
 import org.btider.dediapp.util.ViewUtil;
 
 public class ContactFilterToolbar extends Toolbar {
-  private   OnFilterChangedListener listener;
+    private OnFilterChangedListener listener;
 
-  private EditText        searchText;
-  private AnimatingToggle toggle;
-  private ImageView       keyboardToggle;
-  private ImageView       dialpadToggle;
-  private ImageView       clearToggle;
-  private LinearLayout    toggleContainer;
+    private EditText searchText;
+    private AnimatingToggle toggle;
+    private ImageView keyboardToggle;
+    private ImageView dialpadToggle;
+    private ImageView clearToggle;
+    private LinearLayout toggleContainer;
 
-  public ContactFilterToolbar(Context context) {
-    this(context, null);
-  }
+    public ContactFilterToolbar(Context context) {
+        this(context, null);
+    }
 
-  public ContactFilterToolbar(Context context, AttributeSet attrs) {
-    this(context, attrs, R.attr.toolbarStyle);
-  }
+    public ContactFilterToolbar(Context context, AttributeSet attrs) {
+        this(context, attrs, R.attr.toolbarStyle);
+    }
 
-  public ContactFilterToolbar(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-    inflate(context, R.layout.contact_filter_toolbar, this);
+    public ContactFilterToolbar(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        inflate(context, R.layout.contact_filter_toolbar, this);
 
-    this.searchText      = ViewUtil.findById(this, R.id.search_view);
-    this.toggle          = ViewUtil.findById(this, R.id.button_toggle);
-    this.keyboardToggle  = ViewUtil.findById(this, R.id.search_keyboard);
-    this.dialpadToggle   = ViewUtil.findById(this, R.id.search_dialpad);
-    this.clearToggle     = ViewUtil.findById(this, R.id.search_clear);
-    this.toggleContainer = ViewUtil.findById(this, R.id.toggle_container);
+        this.searchText = ViewUtil.findById(this, R.id.search_view);
+        this.toggle = ViewUtil.findById(this, R.id.button_toggle);
+        this.keyboardToggle = ViewUtil.findById(this, R.id.search_keyboard);
+        this.dialpadToggle = ViewUtil.findById(this, R.id.search_dialpad);
+        this.clearToggle = ViewUtil.findById(this, R.id.search_clear);
+        this.toggleContainer = ViewUtil.findById(this, R.id.toggle_container);
 
-    this.keyboardToggle.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        searchText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
-        ServiceUtil.getInputMethodManager(getContext()).showSoftInput(searchText, 0);
-        displayTogglingView(dialpadToggle);
-      }
-    });
+        this.keyboardToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+                ServiceUtil.getInputMethodManager(getContext()).showSoftInput(searchText, 0);
+                displayTogglingView(dialpadToggle);
+            }
+        });
 
-    this.dialpadToggle.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        searchText.setInputType(InputType.TYPE_CLASS_PHONE);
-        ServiceUtil.getInputMethodManager(getContext()).showSoftInput(searchText, 0);
-        displayTogglingView(keyboardToggle);
-      }
-    });
+        this.dialpadToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchText.setInputType(InputType.TYPE_CLASS_PHONE);
+                ServiceUtil.getInputMethodManager(getContext()).showSoftInput(searchText, 0);
+                displayTogglingView(keyboardToggle);
+            }
+        });
 
-    this.clearToggle.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
+        this.clearToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchText.setText("");
+
+                if (SearchUtil.isTextInput(searchText)) displayTogglingView(dialpadToggle);
+                else displayTogglingView(keyboardToggle);
+            }
+        });
+
+        this.searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!SearchUtil.isEmpty(searchText)) displayTogglingView(clearToggle);
+                else if (SearchUtil.isTextInput(searchText)) displayTogglingView(dialpadToggle);
+                else if (SearchUtil.isPhoneInput(searchText)) displayTogglingView(keyboardToggle);
+                notifyListener();
+            }
+        });
+
+        setLogo(null);
+        setContentInsetStartWithNavigation(0);
+        expandTapArea(toggleContainer, dialpadToggle);
+    }
+
+    public void clear() {
         searchText.setText("");
-
-        if (SearchUtil.isTextInput(searchText)) displayTogglingView(dialpadToggle);
-        else displayTogglingView(keyboardToggle);
-      }
-    });
-
-    this.searchText.addTextChangedListener(new TextWatcher() {
-      @Override
-      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-      }
-
-      @Override
-      public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-      }
-
-      @Override
-      public void afterTextChanged(Editable s) {
-        if (!SearchUtil.isEmpty(searchText)) displayTogglingView(clearToggle);
-        else if (SearchUtil.isTextInput(searchText)) displayTogglingView(dialpadToggle);
-        else if (SearchUtil.isPhoneInput(searchText)) displayTogglingView(keyboardToggle);
         notifyListener();
-      }
-    });
-
-    setLogo(null);
-    setContentInsetStartWithNavigation(0);
-    expandTapArea(toggleContainer, dialpadToggle);
-  }
-
-  public void clear() {
-    searchText.setText("");
-    notifyListener();
-  }
-
-  public void setOnFilterChangedListener(OnFilterChangedListener listener) {
-    this.listener = listener;
-  }
-
-  private void notifyListener() {
-    if (listener != null) listener.onFilterChanged(searchText.getText().toString());
-  }
-
-  private void displayTogglingView(View view) {
-    toggle.display(view);
-    expandTapArea(toggleContainer, view);
-  }
-
-  private void expandTapArea(final View container, final View child) {
-    final int padding = getResources().getDimensionPixelSize(R.dimen.contact_selection_actions_tap_area);
-
-    container.post(new Runnable() {
-      @Override
-      public void run() {
-        Rect rect = new Rect();
-        child.getHitRect(rect);
-
-        rect.top -= padding;
-        rect.left -= padding;
-        rect.right += padding;
-        rect.bottom += padding;
-
-        container.setTouchDelegate(new TouchDelegate(rect, child));
-      }
-    });
-  }
-
-  private static class SearchUtil {
-    static boolean isTextInput(EditText editText) {
-      return (editText.getInputType() & InputType.TYPE_MASK_CLASS) == InputType.TYPE_CLASS_TEXT;
     }
 
-    static boolean isPhoneInput(EditText editText) {
-      return (editText.getInputType() & InputType.TYPE_MASK_CLASS) == InputType.TYPE_CLASS_PHONE;
+    public void setOnFilterChangedListener(OnFilterChangedListener listener) {
+        this.listener = listener;
     }
 
-    public static boolean isEmpty(EditText editText) {
-      return editText.getText().length() <= 0;
+    private void notifyListener() {
+        if (listener != null) listener.onFilterChanged(searchText.getText().toString());
     }
-  }
 
-  public interface OnFilterChangedListener {
-    void onFilterChanged(String filter);
-  }
+    private void displayTogglingView(View view) {
+        toggle.display(view);
+        expandTapArea(toggleContainer, view);
+    }
+
+    private void expandTapArea(final View container, final View child) {
+        final int padding = getResources().getDimensionPixelSize(R.dimen.contact_selection_actions_tap_area);
+
+        container.post(new Runnable() {
+            @Override
+            public void run() {
+                Rect rect = new Rect();
+                child.getHitRect(rect);
+
+                rect.top -= padding;
+                rect.left -= padding;
+                rect.right += padding;
+                rect.bottom += padding;
+
+                container.setTouchDelegate(new TouchDelegate(rect, child));
+            }
+        });
+    }
+
+    private static class SearchUtil {
+        static boolean isTextInput(EditText editText) {
+            return (editText.getInputType() & InputType.TYPE_MASK_CLASS) == InputType.TYPE_CLASS_TEXT;
+        }
+
+        static boolean isPhoneInput(EditText editText) {
+            return (editText.getInputType() & InputType.TYPE_MASK_CLASS) == InputType.TYPE_CLASS_PHONE;
+        }
+
+        public static boolean isEmpty(EditText editText) {
+            return editText.getText().length() <= 0;
+        }
+    }
+
+    public interface OnFilterChangedListener {
+        void onFilterChanged(String filter);
+    }
 }

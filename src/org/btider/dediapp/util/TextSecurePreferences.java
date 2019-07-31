@@ -155,6 +155,8 @@ public class TextSecurePreferences {
   private static final String REGISTRATION_LOCK_LAST_REMINDER_TIME     = "pref_registration_lock_last_reminder_time";
   private static final String REGISTRATION_LOCK_NEXT_REMINDER_INTERVAL = "pref_registration_lock_next_reminder_interval";
 
+  private static final String NEEDS_MESSAGE_PULL = "pref_needs_message_pull";
+
   public static boolean isScreenLockEnabled(@NonNull Context context) {
     return getBooleanPreference(context, SCREEN_LOCK, false);
   }
@@ -356,11 +358,11 @@ public class TextSecurePreferences {
     return getBooleanPreference(context, ALWAYS_RELAY_CALLS_PREF, false);
   }
 
-  public static boolean isGcmDisabled(Context context) {
+  public static boolean isFcmDisabled(Context context) {
     return getBooleanPreference(context, GCM_DISABLED_PREF, false);
   }
 
-  public static void setGcmDisabled(Context context, boolean disabled) {
+  public static void setFcmDisabled(Context context, boolean disabled) {
     setBooleanPreference(context, GCM_DISABLED_PREF, disabled);
   }
 
@@ -454,12 +456,12 @@ public class TextSecurePreferences {
     setBooleanPreference(context, SIGNED_PREKEY_REGISTERED_PREF, value);
   }
 
-  public static void setGcmRegistrationId(Context context, String registrationId) {
+  public static void setFcmToken(Context context, String registrationId) {
     setStringPreference(context, GCM_REGISTRATION_ID_PREF, registrationId);
     setIntegerPrefrence(context, GCM_REGISTRATION_ID_VERSION_PREF, Util.getCurrentApkReleaseVersion(context));
   }
 
-  public static String getGcmRegistrationId(Context context) {
+  public static String getFcmToken(Context context) {
     int storedRegistrationIdVersion = getIntegerPreference(context, GCM_REGISTRATION_ID_VERSION_PREF, 0);
 
     if (storedRegistrationIdVersion != Util.getCurrentApkReleaseVersion(context)) {
@@ -469,11 +471,11 @@ public class TextSecurePreferences {
     }
   }
 
-  public static long getGcmRegistrationIdLastSetTime(Context context) {
+  public static long getFcmTokenLastSetTime(Context context) {
     return getLongPreference(context, GCM_REGISTRATION_ID_TIME_PREF, 0);
   }
 
-  public static void setGcmRegistrationIdLastSetTime(Context context, long timestamp) {
+  public static void setFcmTokenLastSetTime(Context context, long timestamp) {
     setLongPreference(context, GCM_REGISTRATION_ID_TIME_PREF, timestamp);
   }
 
@@ -908,6 +910,14 @@ public class TextSecurePreferences {
                                   new HashSet<>(Arrays.asList(context.getResources().getStringArray(defaultValuesRes))));
   }
 
+  public static boolean getNeedsMessagePull(Context context) {
+    return getBooleanPreference(context, NEEDS_MESSAGE_PULL, false);
+  }
+
+  public static void setNeedsMessagePull(Context context, boolean needsMessagePull) {
+    setBooleanPreference(context, NEEDS_MESSAGE_PULL, needsMessagePull);
+  }
+
   public static void setBooleanPreference(Context context, String key, boolean value) {
     PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean(key, value).apply();
   }
@@ -956,4 +966,14 @@ public class TextSecurePreferences {
       return defaultValues;
     }
   }
+
+  //COSTUM
+  public static void setServiceProductPreference(Context context, String key, String value) {
+    PreferenceManager.getDefaultSharedPreferences(context).edit().putString(key, value).apply();
+  }
+  public static String getServiceProductPreferencee(Context context, String key, String defaultValue) {
+    return PreferenceManager.getDefaultSharedPreferences(context).getString(key,defaultValue);
+  }
+
+
 }

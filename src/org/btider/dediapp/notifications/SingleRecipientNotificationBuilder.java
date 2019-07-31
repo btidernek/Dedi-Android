@@ -53,11 +53,16 @@ public class SingleRecipientNotificationBuilder extends AbstractNotificationBuil
 
     setSmallIcon(R.drawable.icon_notification);
     setColor(context.getResources().getColor(R.color.textsecure_primary));
-    setPriority(TextSecurePreferences.getNotificationPriority(context));
     setCategory(NotificationCompat.CATEGORY_MESSAGE);
+    if (!NotificationChannels.supported()) {
+      setPriority(TextSecurePreferences.getNotificationPriority(context));
+    }else
+      setPriority(Notification.PRIORITY_HIGH);
   }
 
   public void setThread(@NonNull Recipient recipient) {
+    setChannelId(NotificationChannels.OTHER);
+
     if (privacy.isDisplayContact()) {
       setContentTitle(recipient.toShortString());
 

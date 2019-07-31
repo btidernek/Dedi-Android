@@ -43,6 +43,7 @@ import org.btider.dediapp.crypto.InvalidPassphraseException;
 import org.btider.dediapp.crypto.MasterSecret;
 import org.btider.dediapp.crypto.MasterSecretUtil;
 import org.btider.dediapp.notifications.MessageNotifier;
+import org.btider.dediapp.notifications.NotificationChannels;
 import org.btider.dediapp.util.DynamicLanguage;
 import org.btider.dediapp.util.ServiceUtil;
 import org.btider.dediapp.util.TextSecurePreferences;
@@ -111,7 +112,7 @@ public class KeyCachingService extends Service {
       foregroundService();
       broadcastNewSecret();
       startTimeoutIfAppropriate();
-      
+
       new AsyncTask<Void, Void, Void>() {
         @Override
         protected Void doInBackground(Void... params) {
@@ -265,7 +266,7 @@ public class KeyCachingService extends Service {
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
   private void foregroundServiceModern() {
     Log.w("KeyCachingService", "foregrounding KCS");
-    NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+    NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NotificationChannels.OTHER);
 
     builder.setContentTitle(getString(R.string.KeyCachingService_passphrase_cached));
     builder.setContentText(getString(R.string.KeyCachingService_signal_passphrase_cached));
@@ -281,7 +282,7 @@ public class KeyCachingService extends Service {
   }
 
   private void foregroundServiceICS() {
-    NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+    NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NotificationChannels.OTHER);
     RemoteViews remoteViews            = new RemoteViews(getPackageName(), R.layout.key_caching_notification);
 
     remoteViews.setOnClickPendingIntent(R.id.lock_cache_icon, buildLockIntent());
@@ -295,7 +296,7 @@ public class KeyCachingService extends Service {
   }
 
   private void foregroundServiceLegacy() {
-    NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+    NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NotificationChannels.OTHER);
     builder.setSmallIcon(R.drawable.icon_cached);
     builder.setWhen(System.currentTimeMillis());
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="version">1.23</string>
+    <string name="version">1.37</string>
     <string name="app_name">Dedi</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
@@ -177,6 +177,10 @@
     <string name="ConversationActivity_to_capture_photos_and_video_allow_signal_access_to_the_camera">To capture photos and video, allow Dedi access to the camera.</string>
     <string name="ConversationActivity_signal_needs_the_camera_permission_to_take_photos_or_video">Dedi needs the Camera permission to take photos or video, but it has been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"Camera\".</string>
     <string name="ConversationActivity_signal_needs_camera_permissions_to_take_photos_or_video">Dedi needs Camera permissions to take photos or video</string>
+
+    <string name="ConversationActivity_signal_cannot_sent_sms_mms_messages_because_it_is_not_your_default_sms_app">Dedi cannot send SMS/MMS messages because it is not your default SMS app. Would you like to change this in your Android settings?</string>
+    <string name="ConversationActivity_yes">Yes</string>
+    <string name="ConversationActivity_no">No</string>
 
     <string name="ConversationActivity_quoted_contact_message">%1$s %2$s</string>
 
@@ -751,7 +755,16 @@
     <string name="MessageNotifier_contact_message">%1$s %2$s</string>
     <string name="MessageNotifier_unknown_contact_message">Contact</string>
 
-    <!-- MmsPreferencesFragment -->
+    <!-- Notification Channels -->
+    <string name="NotificationChannel_messages">Default</string>
+    <string name="NotificationChannel_calls">Calls</string>
+    <string name="NotificationChannel_failures">Failures</string>
+    <string name="NotificationChannel_backups">Backups</string>
+    <string name="NotificationChannel_locked_status">Lock status</string>
+    <string name="NotificationChannel_app_updates">App updates</string>
+    <string name="NotificationChannel_other">Other</string>
+    <string name="NotificationChannel_group_messages">Messages</string>
+    <string name="NotificationChannel_missing_display_name">Unknown</string>
 
     <!-- QuickResponseService -->
     <string name="QuickResponseService_quick_response_unavailable_when_Signal_is_locked">Quick response unavailable when Dedi is locked!</string>
@@ -1536,6 +1549,9 @@
 
     <string name="ShortcutLauncherActivity_invalid_shortcut">Invalid shortcut</string>
     <string name="ConversationActivity_added_to_home_screen">Added to home screen</string>
+
+
+    <string name="ConversationActivity_service_web_app_menu">Services</string>
     <!-- CUSTOM -->
 
 </resources>

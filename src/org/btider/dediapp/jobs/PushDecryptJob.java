@@ -32,6 +32,7 @@ import org.btider.dediapp.database.model.MessageRecord;
 import org.btider.dediapp.database.model.MmsMessageRecord;
 import org.btider.dediapp.groups.GroupMessageProcessor;
 import org.btider.dediapp.notifications.MessageNotifier;
+import org.btider.dediapp.notifications.NotificationChannels;
 import org.btider.dediapp.recipients.Recipient;
 import org.btider.dediapp.service.WebRtcCallService;
 import org.btider.dediapp.util.Base64;
@@ -162,7 +163,7 @@ public class PushDecryptJob extends ContextJob {
     if (TextSecurePreferences.getNeedsSqlCipherMigration(context)) {
       Log.w(TAG, "Skipping job, waiting for sqlcipher migration...");
       NotificationManagerCompat.from(context).notify(494949,
-                                                     new NotificationCompat.Builder(context)
+                                                     new NotificationCompat.Builder(context, NotificationChannels.OTHER)
                                                          .setSmallIcon(R.drawable.icon_notification)
                                                          .setPriority(NotificationCompat.PRIORITY_HIGH)
                                                          .setCategory(NotificationCompat.CATEGORY_MESSAGE)

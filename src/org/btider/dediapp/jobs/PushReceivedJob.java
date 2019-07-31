@@ -23,8 +23,16 @@ public abstract class PushReceivedJob extends ContextJob {
 
   private static final String TAG = PushReceivedJob.class.getSimpleName();
 
+  public static final Object RECEIVE_LOCK = new Object();
+
   protected PushReceivedJob(Context context, JobParameters parameters) {
     super(context, parameters);
+  }
+
+  public void processEnvelope(@NonNull SignalServiceEnvelope envelope) {
+    synchronized (RECEIVE_LOCK) {
+      handle(envelope);
+    }
   }
 
   public void handle(SignalServiceEnvelope envelope) {

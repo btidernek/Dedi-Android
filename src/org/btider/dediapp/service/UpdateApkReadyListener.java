@@ -14,6 +14,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import org.btider.dediapp.R;
+import org.btider.dediapp.notifications.NotificationChannels;
 import org.btider.dediapp.util.FileProviderUtil;
 import org.btider.dediapp.util.FileUtils;
 import org.btider.dediapp.util.Hex;
@@ -61,7 +62,7 @@ public class UpdateApkReadyListener extends BroadcastReceiver {
 
     PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-    Notification notification = new NotificationCompat.Builder(context)
+    Notification notification = new NotificationCompat.Builder(context, NotificationChannels.OTHER)
         .setOngoing(true)
         .setContentTitle(context.getString(R.string.UpdateApkReadyListener_Signal_update))
         .setContentText(context.getString(R.string.UpdateApkReadyListener_a_new_version_of_signal_is_available_tap_to_update))

@@ -19,6 +19,7 @@ import org.btider.dediapp.R;
 import org.btider.dediapp.components.emoji.EmojiTextView;
 import org.btider.dediapp.recipients.Recipient;
 import org.btider.dediapp.util.ResUtil;
+import org.btider.dediapp.util.TextSecurePreferences;
 import org.btider.dediapp.util.spans.CenterAlignedRelativeSizeSpan;
 
 public class FromTextView extends EmojiTextView {
@@ -39,6 +40,17 @@ public class FromTextView extends EmojiTextView {
 
   public void setText(Recipient recipient, boolean read) {
     String fromString = recipient.toShortString();
+
+
+    //String fromString = "MUHTAR";
+//    if(recipient.getAddress().isPhone()){
+//      String ss = TextSecurePreferences.getServiceProductPreferencee(getContext(),recipient.getAddress().toPhoneString(),null);
+//      if(ss != null){
+//        String[] data = ss.split(",");
+//        fromString = data[0];
+//        read = false;
+//      }
+//    }
 
     int typeface;
 

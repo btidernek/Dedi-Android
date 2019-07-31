@@ -53,17 +53,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.annimon.stream.Stream;
-
-import org.btider.dediapp.database.Address;
-import org.btider.dediapp.jobs.SendReadReceiptJob;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import org.btider.dediapp.components.recyclerview.DeleteItemAnimator;
 import org.btider.dediapp.components.registration.PulsingFloatingActionButton;
-import org.btider.dediapp.components.reminder.DefaultSmsReminder;
 import org.btider.dediapp.components.reminder.DozeReminder;
 import org.btider.dediapp.components.reminder.ExpiredBuildReminder;
 import org.btider.dediapp.components.reminder.OutdatedBuildReminder;
@@ -77,31 +68,6 @@ import org.btider.dediapp.database.DatabaseFactory;
 import org.btider.dediapp.database.MessagingDatabase;
 import org.btider.dediapp.database.loaders.ConversationListLoader;
 import org.btider.dediapp.events.ReminderUpdateEvent;
-import org.btider.dediapp.notifications.MarkReadReceiver;
-import org.btider.dediapp.notifications.MessageNotifier;
-import org.btider.dediapp.recipients.Recipient;
-import org.btider.dediapp.util.Util;
-import org.btider.dediapp.util.ViewUtil;
-import org.btider.dediapp.util.task.SnackbarAsyncTask;
-import org.btider.dediapp.ConversationListAdapter.ItemClickListener;
-import org.btider.dediapp.R;
-import org.btider.dediapp.components.recyclerview.DeleteItemAnimator;
-import org.btider.dediapp.components.registration.PulsingFloatingActionButton;
-import org.btider.dediapp.components.reminder.DefaultSmsReminder;
-import org.btider.dediapp.components.reminder.DozeReminder;
-import org.btider.dediapp.components.reminder.ExpiredBuildReminder;
-import org.btider.dediapp.components.reminder.OutdatedBuildReminder;
-import org.btider.dediapp.components.reminder.PushRegistrationReminder;
-import org.btider.dediapp.components.reminder.Reminder;
-import org.btider.dediapp.components.reminder.ReminderView;
-import org.btider.dediapp.components.reminder.ShareReminder;
-import org.btider.dediapp.components.reminder.SystemSmsImportReminder;
-import org.btider.dediapp.components.reminder.UnauthorizedReminder;
-import org.btider.dediapp.crypto.MasterSecret;
-import org.btider.dediapp.database.DatabaseFactory;
-import org.btider.dediapp.database.MessagingDatabase.MarkedMessageInfo;
-import org.btider.dediapp.database.loaders.ConversationListLoader;
-import org.btider.dediapp.events.ReminderUpdateEvent;
 import org.btider.dediapp.mms.GlideApp;
 import org.btider.dediapp.notifications.MarkReadReceiver;
 import org.btider.dediapp.notifications.MessageNotifier;
@@ -109,6 +75,9 @@ import org.btider.dediapp.recipients.Recipient;
 import org.btider.dediapp.util.Util;
 import org.btider.dediapp.util.ViewUtil;
 import org.btider.dediapp.util.task.SnackbarAsyncTask;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.whispersystems.libsignal.util.guava.Optional;
 
 import java.util.HashSet;
@@ -220,8 +189,9 @@ public class ConversationListFragment extends Fragment
           return Optional.of(new ExpiredBuildReminder(context));
         } else if (OutdatedBuildReminder.isEligible()) {
           return Optional.of(new OutdatedBuildReminder(context));
-        } else if (DefaultSmsReminder.isEligible(context)) {
-          return Optional.of(new DefaultSmsReminder(context));
+//        }
+//        else if (DefaultSmsReminder.isEligible(context)) {
+//          return Optional.of(new DefaultSmsReminder(context));
         } else if (Util.isDefaultSmsProvider(context) && SystemSmsImportReminder.isEligible(context)) {
           return Optional.of((new SystemSmsImportReminder(context)));
         } else if (PushRegistrationReminder.isEligible(context)) {

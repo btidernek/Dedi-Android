@@ -30,9 +30,13 @@ import java.util.Set;
 public abstract class Database {
 
   protected static final String ID_WHERE              = "_id = ?";
-  private   static final String CONVERSATION_URI      = "content://textsecure/thread/";
-  private   static final String CONVERSATION_LIST_URI = "content://textsecure/conversation-list";
-  private   static final String ATTACHMENT_URI        = "content://textsecure/attachment/";
+  private   static final String CONVERSATION_URI      = "content://org.btider.dediapp/textsecure/thread/";
+  private   static final String CONVERSATION_LIST_URI = "content://org.btider.dediapp/textsecure/conversation-list";
+  private   static final String ATTACHMENT_URI        = "content://org.btider.dediapp/textsecure/attachment/";
+
+//  private   static final String CONVERSATION_URI      = "content://textsecure/thread/";
+//  private   static final String CONVERSATION_LIST_URI = "content://textsecure/conversation-list";
+//  private   static final String ATTACHMENT_URI        = "content://textsecure/attachment/";
 
   protected SQLCipherOpenHelper databaseHelper;
   protected final Context             context;

@@ -31,11 +31,13 @@
         <item android:title="@string/text_secure_normal__invite_friends"
             android:id="@+id/menu_invite" />
 
-
         </menu>
     </item>
 
     <item android:title="@string/text_secure_normal__help"
           android:id="@+id/menu_help"/>
+
+    <!--<item android:title="QR Kod Okut"-->
+        <!--android:id="@+id/menu_qrcode_reader"/>-->
 
 </menu>

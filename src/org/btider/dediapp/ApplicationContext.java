@@ -20,7 +20,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
@@ -33,27 +32,11 @@ import org.btider.dediapp.dependencies.AxolotlStorageModule;
 import org.btider.dediapp.dependencies.InjectableType;
 import org.btider.dediapp.dependencies.SignalCommunicationModule;
 import org.btider.dediapp.jobs.CreateSignedPreKeyJob;
-import org.btider.dediapp.jobs.GcmRefreshJob;
+import org.btider.dediapp.jobs.FcmRefreshJob;
 import org.btider.dediapp.jobs.requirements.MasterSecretRequirementProvider;
 import org.btider.dediapp.jobs.requirements.ServiceRequirementProvider;
 import org.btider.dediapp.jobs.requirements.SqlCipherMigrationRequirementProvider;
-import org.btider.dediapp.push.SignalServiceNetworkAccess;
-import org.btider.dediapp.service.DirectoryRefreshListener;
-import org.btider.dediapp.service.ExpiringMessageManager;
-import org.btider.dediapp.service.LocalBackupListener;
-import org.btider.dediapp.service.RotateSignedPreKeyListener;
-import org.btider.dediapp.service.UpdateApkRefreshListener;
-import org.btider.dediapp.util.TextSecurePreferences;
-import org.btider.dediapp.BuildConfig;
-import org.btider.dediapp.crypto.PRNGFixes;
-import org.btider.dediapp.dependencies.AxolotlStorageModule;
-import org.btider.dediapp.dependencies.InjectableType;
-import org.btider.dediapp.dependencies.SignalCommunicationModule;
-import org.btider.dediapp.jobs.CreateSignedPreKeyJob;
-import org.btider.dediapp.jobs.GcmRefreshJob;
-import org.btider.dediapp.jobs.requirements.MasterSecretRequirementProvider;
-import org.btider.dediapp.jobs.requirements.ServiceRequirementProvider;
-import org.btider.dediapp.jobs.requirements.SqlCipherMigrationRequirementProvider;
+import org.btider.dediapp.notifications.NotificationChannels;
 import org.btider.dediapp.push.SignalServiceNetworkAccess;
 import org.btider.dediapp.service.DirectoryRefreshListener;
 import org.btider.dediapp.service.ExpiringMessageManager;
@@ -121,6 +104,7 @@ public class ApplicationContext extends MultiDexApplication implements Dependenc
     initializePeriodicTasks();
     initializeCircumvention();
     initializeWebRtc();
+    NotificationChannels.create(this);
   }
 
   @Override
@@ -166,10 +150,10 @@ public class ApplicationContext extends MultiDexApplication implements Dependenc
 
   private void initializeGcmCheck() {
     if (TextSecurePreferences.isPushRegistered(this)) {
-      long nextSetTime = TextSecurePreferences.getGcmRegistrationIdLastSetTime(this) + TimeUnit.HOURS.toMillis(6);
+      long nextSetTime = TextSecurePreferences.getFcmTokenLastSetTime(this) + TimeUnit.HOURS.toMillis(6);
 
-      if (TextSecurePreferences.getGcmRegistrationId(this) == null || nextSetTime <= System.currentTimeMillis()) {
-        this.jobManager.add(new GcmRefreshJob(this));
+      if (TextSecurePreferences.getFcmToken(this) == null || nextSetTime <= System.currentTimeMillis()) {
+        this.jobManager.add(new FcmRefreshJob(this));
       }
     }
   }

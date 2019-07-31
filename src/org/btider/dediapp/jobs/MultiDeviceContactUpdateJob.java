@@ -136,7 +136,7 @@ public class MultiDeviceContactUpdateJob extends MasterSecretJob implements Inje
       Log.w(TAG, "No contact permissions, skipping multi-device contact update...");
       return;
     }
-    
+
     File contactDataFile = createTempFile("multidevice-contact-update");
 
     try {
@@ -214,7 +214,7 @@ public class MultiDeviceContactUpdateJob extends MasterSecretJob implements Inje
     if (uri == null) {
       return Optional.absent();
     }
-    
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
       try {
         Uri                 displayPhotoUri = Uri.withAppendedPath(uri, ContactsContract.Contacts.Photo.DISPLAY_PHOTO);

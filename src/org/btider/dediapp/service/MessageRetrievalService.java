@@ -1,5 +1,6 @@
 package org.btider.dediapp.service;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import org.btider.dediapp.R;
 import org.btider.dediapp.dependencies.InjectableType;
 import org.btider.dediapp.gcm.GcmBroadcastReceiver;
 import org.btider.dediapp.jobs.PushContentReceiveJob;
+import org.btider.dediapp.notifications.NotificationChannels;
 import org.btider.dediapp.util.TextSecurePreferences;
 import org.whispersystems.jobqueue.requirements.NetworkRequirement;
 import org.whispersystems.jobqueue.requirements.NetworkRequirementProvider;
@@ -104,8 +106,9 @@ public class MessageRetrievalService extends Service implements InjectableType, 
   }
 
   private void setForegroundIfNecessary() {
-    if (TextSecurePreferences.isGcmDisabled(this)) {
-      NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+    //startForeground(1,new Notification());
+    if (TextSecurePreferences.isFcmDisabled(this)) {
+      NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NotificationChannels.OTHER);
       builder.setContentTitle(getString(R.string.MessageRetrievalService_signal));
       builder.setContentText(getString(R.string.MessageRetrievalService_background_connection_enabled));
       builder.setPriority(NotificationCompat.PRIORITY_MIN);
@@ -135,13 +138,13 @@ public class MessageRetrievalService extends Service implements InjectableType, 
   private synchronized void decrementPushReceived() {
     if (!pushPending.isEmpty()) {
       Intent intent = pushPending.remove(0);
-      GcmBroadcastReceiver.completeWakefulIntent(intent);
+      //GcmBroadcastReceiver.completeWakefulIntent(intent);
       notifyAll();
     }
   }
 
   private synchronized boolean isConnectionNecessary() {
-    boolean isGcmDisabled = TextSecurePreferences.isGcmDisabled(this);
+    boolean isGcmDisabled = TextSecurePreferences.isFcmDisabled(this);
 
     Log.w(TAG, String.format("Network requirement: %s, active activities: %s, push pending: %s, gcm disabled: %b",
                              networkRequirement.isPresent(), activeActivities, pushPending.size(), isGcmDisabled));

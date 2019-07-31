@@ -32,6 +32,7 @@ import org.btider.dediapp.database.SignedPreKeyDatabase;
 import org.btider.dediapp.database.SmsDatabase;
 import org.btider.dediapp.database.ThreadDatabase;
 import org.btider.dediapp.jobs.RefreshPreKeysJob;
+import org.btider.dediapp.notifications.NotificationChannels;
 import org.btider.dediapp.service.KeyCachingService;
 import org.btider.dediapp.util.TextSecurePreferences;
 
@@ -238,6 +239,8 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
           }
         }
       }
+
+      NotificationChannels.create(context);
 
       if(oldVersion < GROUP_ADMIN_ADD) {
         db.execSQL("ALTER TABLE groups ADD COLUMN admins TEXT");

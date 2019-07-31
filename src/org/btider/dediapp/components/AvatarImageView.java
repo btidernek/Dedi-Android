@@ -106,6 +106,9 @@ public class AvatarImageView extends AppCompatImageView {
   }
 
   private void setAvatarClickHandler(final Recipient recipient, boolean quickContactEnabled) {
+    if(recipient.isOnlyRead())
+      return;
+
     if (!recipient.isGroupRecipient() && quickContactEnabled) {
       super.setOnClickListener(v -> {
         if (recipient.getContactUri() != null) {

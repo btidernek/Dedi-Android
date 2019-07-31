@@ -5,6 +5,7 @@ import android.util.Log;
 
 import org.btider.dediapp.dependencies.InjectableType;
 import org.btider.dediapp.dependencies.InjectableType;
+import org.btider.dediapp.util.TextSecurePreferences;
 import org.whispersystems.jobqueue.JobParameters;
 import org.whispersystems.jobqueue.requirements.NetworkRequirement;
 import org.whispersystems.signalservice.api.SignalServiceMessageReceiver;
@@ -42,6 +43,17 @@ public class PushNotificationReceiveJob extends PushReceivedJob implements Injec
     });
   }
 
+  public void pullAndProcessMessages(SignalServiceMessageReceiver receiver, String tag, long startTime) throws IOException {
+    synchronized (PushReceivedJob.RECEIVE_LOCK) {
+      receiver.retrieveMessages(envelope -> {
+        Log.i(tag, "Retrieved an envelope." + timeSuffix(startTime));
+        processEnvelope(envelope);
+        Log.i(tag, "Successfully processed an envelope." + timeSuffix(startTime));
+      });
+      TextSecurePreferences.setNeedsMessagePull(context, false);
+    }
+  }
+
   @Override
   public boolean onShouldRetry(Exception e) {
     Log.w(TAG, e);
@@ -52,5 +64,9 @@ public class PushNotificationReceiveJob extends PushReceivedJob implements Injec
   public void onCanceled() {
     Log.w(TAG, "***** Failed to download pending message!");
 //    MessageNotifier.notifyMessagesPending(getContext());
+  }
+
+  private static String timeSuffix(long startTime) {
+    return " (" + (System.currentTimeMillis() - startTime) + " ms elapsed)";
   }
 }

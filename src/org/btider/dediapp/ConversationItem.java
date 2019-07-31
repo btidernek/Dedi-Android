@@ -352,6 +352,10 @@ public class ConversationItem extends LinearLayout
       if (mediaThumbnailStub.resolved()) mediaThumbnailStub.get().setBackgroundColorHint(defaultBubbleColor);
     } else {
       int color = recipient.getColor().toConversationColor(context);
+      if(recipient.isOnlyRead()){
+        color = Color.parseColor(recipient.getServiceWebColor());
+      }
+
       bodyBubble.getBackground().setColorFilter(color, PorterDuff.Mode.MULTIPLY);
       if (mediaThumbnailStub.resolved()) mediaThumbnailStub.get().setBackgroundColorHint(color);
     }

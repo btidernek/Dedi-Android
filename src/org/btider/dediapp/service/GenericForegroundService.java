@@ -6,12 +6,15 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 
 import org.btider.dediapp.ConversationListActivity;
 import org.btider.dediapp.R;
+import org.btider.dediapp.notifications.NotificationChannels;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -19,6 +22,8 @@ public class GenericForegroundService extends Service {
 
   private static final int    NOTIFICATION_ID = 827353982;
   private static final String EXTRA_TITLE     = "extra_title";
+  private static final String EXTRA_CHANNEL_ID = "extra_channel_id";
+  private static final String EXTRA_ICON_RES   = "extra_icon_res";
 
   private static final String ACTION_START = "start";
   private static final String ACTION_STOP  = "stop";
@@ -44,7 +49,7 @@ public class GenericForegroundService extends Service {
     assert title != null;
 
     if (foregroundCount.getAndIncrement() == 0) {
-      startForeground(NOTIFICATION_ID, new NotificationCompat.Builder(this)
+      startForeground(NOTIFICATION_ID, new NotificationCompat.Builder(this, NotificationChannels.OTHER)
           .setSmallIcon(R.drawable.ic_signal_grey_24dp)
           .setContentTitle(title)
           .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, ConversationListActivity.class), 0))
@@ -66,17 +71,27 @@ public class GenericForegroundService extends Service {
   }
 
   public static void startForegroundTask(@NonNull Context context, @NonNull String task) {
+    startForegroundTask(context, task, NotificationChannels.OTHER);
+  }
+
+  public static void startForegroundTask(@NonNull Context context, @NonNull String task, @NonNull String channelId) {
+    startForegroundTask(context, task, channelId, R.drawable.ic_signal_grey_24dp);
+  }
+
+  public static void startForegroundTask(@NonNull Context context, @NonNull String task, @NonNull String channelId, @DrawableRes int iconRes) {
     Intent intent = new Intent(context, GenericForegroundService.class);
     intent.setAction(ACTION_START);
     intent.putExtra(EXTRA_TITLE, task);
+    intent.putExtra(EXTRA_CHANNEL_ID, channelId);
+    intent.putExtra(EXTRA_ICON_RES, iconRes);
 
-    context.startService(intent);
+    ContextCompat.startForegroundService(context, intent);
   }
 
   public static void stopForegroundTask(@NonNull Context context) {
     Intent intent = new Intent(context, GenericForegroundService.class);
     intent.setAction(ACTION_STOP);
 
-    context.startService(intent);
+    ContextCompat.startForegroundService(context, intent);
   }
 }

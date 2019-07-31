@@ -26,9 +26,9 @@ import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import org.btider.dediapp.dependencies.InjectableType;
+import org.btider.dediapp.notifications.NotificationChannels;
 import org.btider.dediapp.util.TextSecurePreferences;
 import org.btider.dediapp.PlayServicesProblemActivity;
 import org.btider.dediapp.R;
@@ -42,70 +42,70 @@ import org.whispersystems.signalservice.api.push.exceptions.NonSuccessfulRespons
 
 import javax.inject.Inject;
 
-public class GcmRefreshJob extends ContextJob implements InjectableType {
+public class GcmRefreshJob { //extends ContextJob implements InjectableType {
 
-  private static final String TAG = GcmRefreshJob.class.getSimpleName();
-
-  public static final String REGISTRATION_ID = "853247069301";
-
-  @Inject transient SignalServiceAccountManager textSecureAccountManager;
-
-  public GcmRefreshJob(Context context) {
-    super(context, JobParameters.newBuilder()
-                                .withRequirement(new NetworkRequirement(context))
-                                .withRetryCount(1)
-                                .create());
-  }
-
-  @Override
-  public void onAdded() {}
-
-  @Override
-  public void onRun() throws Exception {
-    if (TextSecurePreferences.isGcmDisabled(context)) return;
-
-    Log.w(TAG, "Reregistering GCM...");
-    int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
-
-    if (result != ConnectionResult.SUCCESS) {
-      notifyGcmFailure();
-    } else {
-      String gcmId = GoogleCloudMessaging.getInstance(context).register(REGISTRATION_ID);
-      textSecureAccountManager.setGcmId(Optional.of(gcmId));
-
-      TextSecurePreferences.setGcmRegistrationId(context, gcmId);
-      TextSecurePreferences.setGcmRegistrationIdLastSetTime(context, System.currentTimeMillis());
-      TextSecurePreferences.setWebsocketRegistered(context, true);
-    }
-  }
-
-  @Override
-  public void onCanceled() {
-    Log.w(TAG, "GCM reregistration failed after retry attempt exhaustion!");
-  }
-
-  @Override
-  public boolean onShouldRetry(Exception throwable) {
-    if (throwable instanceof NonSuccessfulResponseCodeException) return false;
-    return true;
-  }
-
-  private void notifyGcmFailure() {
-    Intent                     intent        = new Intent(context, PlayServicesProblemActivity.class);
-    PendingIntent              pendingIntent = PendingIntent.getActivity(context, 1122, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-    NotificationCompat.Builder builder       = new NotificationCompat.Builder(context);
-
-    builder.setSmallIcon(R.drawable.icon_notification);
-    builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(),
-                                                      R.drawable.ic_action_warning_red));
-    builder.setContentTitle(context.getString(R.string.GcmRefreshJob_Permanent_Signal_communication_failure));
-    builder.setContentText(context.getString(R.string.GcmRefreshJob_Signal_was_unable_to_register_with_Google_Play_Services));
-    builder.setTicker(context.getString(R.string.GcmRefreshJob_Permanent_Signal_communication_failure));
-    builder.setVibrate(new long[] {0, 1000});
-    builder.setContentIntent(pendingIntent);
-
-    ((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE))
-        .notify(12, builder.build());
-  }
+//  private static final String TAG = GcmRefreshJob.class.getSimpleName();
+//
+//  public static final String REGISTRATION_ID = "853247069301";
+//
+//  @Inject transient SignalServiceAccountManager textSecureAccountManager;
+//
+//  public GcmRefreshJob(Context context) {
+//    super(context, JobParameters.newBuilder()
+//                                .withRequirement(new NetworkRequirement(context))
+//                                .withRetryCount(1)
+//                                .create());
+//  }
+//
+//  @Override
+//  public void onAdded() {}
+//
+//  @Override
+//  public void onRun() throws Exception {
+//    if (TextSecurePreferences.isGcmDisabled(context)) return;
+//
+//    Log.w(TAG, "Reregistering GCM...");
+//    int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
+//
+//    if (result != ConnectionResult.SUCCESS) {
+//      notifyGcmFailure();
+//    } else {
+//      String gcmId = GoogleCloudMessaging.getInstance(context).register(REGISTRATION_ID);
+//      textSecureAccountManager.setGcmId(Optional.of(gcmId));
+//
+//      TextSecurePreferences.setGcmRegistrationId(context, gcmId);
+//      TextSecurePreferences.setGcmRegistrationIdLastSetTime(context, System.currentTimeMillis());
+//      TextSecurePreferences.setWebsocketRegistered(context, true);
+//    }
+//  }
+//
+//  @Override
+//  public void onCanceled() {
+//    Log.w(TAG, "GCM reregistration failed after retry attempt exhaustion!");
+//  }
+//
+//  @Override
+//  public boolean onShouldRetry(Exception throwable) {
+//    if (throwable instanceof NonSuccessfulResponseCodeException) return false;
+//    return true;
+//  }
+//
+//  private void notifyGcmFailure() {
+//    Intent                     intent        = new Intent(context, PlayServicesProblemActivity.class);
+//    PendingIntent              pendingIntent = PendingIntent.getActivity(context, 1122, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+//    NotificationCompat.Builder builder       = new NotificationCompat.Builder(context,NotificationChannels.OTHER);
+//
+//    builder.setSmallIcon(R.drawable.icon_notification);
+//    builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(),
+//                                                      R.drawable.ic_action_warning_red));
+//    builder.setContentTitle(context.getString(R.string.GcmRefreshJob_Permanent_Signal_communication_failure));
+//    builder.setContentText(context.getString(R.string.GcmRefreshJob_Signal_was_unable_to_register_with_Google_Play_Services));
+//    builder.setTicker(context.getString(R.string.GcmRefreshJob_Permanent_Signal_communication_failure));
+//    builder.setVibrate(new long[] {0, 1000});
+//    builder.setContentIntent(pendingIntent);
+//
+//    ((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE))
+//        .notify(12, builder.build());
+//  }
 
 }

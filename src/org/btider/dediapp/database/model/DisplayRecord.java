@@ -40,198 +40,196 @@ import java.util.Map;
  * shared between ThreadRecord and MessageRecord.
  *
  * @author Moxie Marlinspike
- *
  */
 
 public abstract class DisplayRecord {
 
-  protected final Context context;
-  protected final long type;
+    protected final Context context;
+    protected final long type;
 
-  private final Recipient recipient;
-  private final long       dateSent;
-  private final long       dateReceived;
-  private final long       threadId;
-  private final String     body;
-  private final int        deliveryStatus;
-  private final int        deliveryReceiptCount;
-  private final int        readReceiptCount;
+    private final Recipient recipient;
+    private final long dateSent;
+    private final long dateReceived;
+    private final long threadId;
+    private final String body;
+    private final int deliveryStatus;
+    private final int deliveryReceiptCount;
+    private final int readReceiptCount;
 
-  DisplayRecord(Context context, String body, Recipient recipient, long dateSent,
-                long dateReceived, long threadId, int deliveryStatus, int deliveryReceiptCount,
-                long type, int readReceiptCount)
-  {
-    this.context              = context.getApplicationContext();
-    this.threadId             = threadId;
-    this.recipient            = recipient;
-    this.dateSent             = dateSent;
-    this.dateReceived         = dateReceived;
-    this.type                 = type;
-    this.body                 = body;
-    this.deliveryReceiptCount = deliveryReceiptCount;
-    this.readReceiptCount     = readReceiptCount;
-    this.deliveryStatus       = deliveryStatus;
-  }
+    DisplayRecord(Context context, String body, Recipient recipient, long dateSent,
+                  long dateReceived, long threadId, int deliveryStatus, int deliveryReceiptCount,
+                  long type, int readReceiptCount) {
+        this.context = context.getApplicationContext();
+        this.threadId = threadId;
+        this.recipient = recipient;
+        this.dateSent = dateSent;
+        this.dateReceived = dateReceived;
+        this.type = type;
+        this.body = body;
+        this.deliveryReceiptCount = deliveryReceiptCount;
+        this.readReceiptCount = readReceiptCount;
+        this.deliveryStatus = deliveryStatus;
+    }
 
-  public @NonNull String getBody() {
-    return body == null ? "" : body;
-  }
+    public @NonNull
+    String getBody() {
+        return body == null ? "" : body;
+    }
 
-  public boolean isFailed() {
-    return
-        MmsSmsColumns.Types.isFailedMessageType(type)            ||
-        MmsSmsColumns.Types.isPendingSecureSmsFallbackType(type) ||
-        deliveryStatus >= SmsDatabase.Status.STATUS_FAILED;
-  }
+    public boolean isFailed() {
+        return
+                MmsSmsColumns.Types.isFailedMessageType(type) ||
+                        MmsSmsColumns.Types.isPendingSecureSmsFallbackType(type) ||
+                        deliveryStatus >= SmsDatabase.Status.STATUS_FAILED;
+    }
 
-  public boolean isPending() {
-    return MmsSmsColumns.Types.isPendingMessageType(type) &&
-           !MmsSmsColumns.Types.isIdentityVerified(type)  &&
-           !MmsSmsColumns.Types.isIdentityDefault(type);
-  }
+    public boolean isPending() {
+        return MmsSmsColumns.Types.isPendingMessageType(type) &&
+                !MmsSmsColumns.Types.isIdentityVerified(type) &&
+                !MmsSmsColumns.Types.isIdentityDefault(type);
+    }
 
-  public boolean isOutgoing() {
-    return MmsSmsColumns.Types.isOutgoingMessageType(type);
-  }
+    public boolean isOutgoing() {
+        return MmsSmsColumns.Types.isOutgoingMessageType(type);
+    }
 
-  public abstract SpannableString getDisplayBody();
+    public abstract SpannableString getDisplayBody();
 
-  public Recipient getRecipient() {
-    return recipient;
-  }
+    public Recipient getRecipient() {
+        return recipient;
+    }
 
-  public long getDateSent() {
-    return dateSent;
-  }
+    public long getDateSent() {
+        return dateSent;
+    }
 
-  public long getDateReceived() {
-    return dateReceived;
-  }
+    public long getDateReceived() {
+        return dateReceived;
+    }
 
-  public long getThreadId() {
-    return threadId;
-  }
+    public long getThreadId() {
+        return threadId;
+    }
 
-  public boolean isKeyExchange() {
-    return SmsDatabase.Types.isKeyExchangeType(type);
-  }
+    public boolean isKeyExchange() {
+        return SmsDatabase.Types.isKeyExchangeType(type);
+    }
 
-  public boolean isEndSession() {
-    return SmsDatabase.Types.isEndSessionType(type);
-  }
+    public boolean isEndSession() {
+        return SmsDatabase.Types.isEndSessionType(type);
+    }
 
-  public boolean isGroupUpdate() {
-    return SmsDatabase.Types.isGroupUpdate(type);
-  }
+    public boolean isGroupUpdate() {
+        return SmsDatabase.Types.isGroupUpdate(type);
+    }
 
 
+    public boolean isGroupUserAdd() {
+        return SmsDatabase.Types.isGroupAddUser(type);
+    }
 
-  public boolean isGroupUserAdd() {
-    return SmsDatabase.Types.isGroupAddUser(type);
-  }
+    public boolean isGroupUserRemove() {
+        return SmsDatabase.Types.isGroupRemoveUser(type);
+    }
 
-  public boolean isGroupUserRemove() {
-    return SmsDatabase.Types.isGroupRemoveUser(type);
-  }
+    public boolean isGroupCreate(long id) {
 
-  public boolean isGroupCreate(long id) {
+        if (isGroupAction() && isGroupUpdate()) {
+            MmsSmsDatabase mmsSmsDatabase = DatabaseFactory.getMmsSmsDatabase(context);
+            long count = mmsSmsDatabase.getConversationCount(threadId);
+            if (count == 0) {
+                return true;
+            }
+            MmsSmsDatabase.Reader reader = null;
 
-    if(isGroupAction() && isGroupUpdate()){
-      MmsSmsDatabase mmsSmsDatabase = DatabaseFactory.getMmsSmsDatabase(context);
-      long count                    = mmsSmsDatabase.getConversationCount(threadId);
-      if (count == 0) {
-        return true;
-      }
-      MmsSmsDatabase.Reader reader = null;
+            try {
+                reader = mmsSmsDatabase.readerFor(mmsSmsDatabase.getConversationSnippetASC(threadId));
+                MessageRecord record;
 
-      try {
-        reader = mmsSmsDatabase.readerFor(mmsSmsDatabase.getConversationSnippetASC(threadId));
-        MessageRecord record;
-
-        if (reader != null && (record = reader.getNext()) != null) {
-          System.out.println(record.getId());
-          if(id==record.getId()){
-            return true;
-          }
+                if (reader != null && (record = reader.getNext()) != null) {
+                    System.out.println(record.getId());
+                    if (id == record.getId()) {
+                        return true;
+                    }
+                }
+            } finally {
+                if (reader != null)
+                    reader.close();
+            }
         }
-      } finally {
-        if (reader != null)
-          reader.close();
-      }
-    }
-    return false;
-  }
-
-  public boolean isGroupQuit() {
-    return SmsDatabase.Types.isGroupQuit(type);
-  }
-
-  public boolean isGroupAction() {
-    return isGroupUpdate() || isGroupQuit();
-  }
-
-  public boolean isExpirationTimerUpdate() {
-    return SmsDatabase.Types.isExpirationTimerUpdate(type);
-  }
-
-  public boolean isCallLog() {
-    return SmsDatabase.Types.isCallLog(type);
-  }
-
-  public boolean isJoined() {
-    return SmsDatabase.Types.isJoinedType(type);
-  }
-
-  public boolean isIncomingCall() {
-    return SmsDatabase.Types.isIncomingCall(type);
-  }
-
-  public boolean isOutgoingCall() {
-    return SmsDatabase.Types.isOutgoingCall(type);
-  }
-
-  public boolean isMissedCall() {
-    return SmsDatabase.Types.isMissedCall(type);
-  }
-
-  public boolean isVerificationStatusChange() {
-    return SmsDatabase.Types.isIdentityDefault(type) || SmsDatabase.Types.isIdentityVerified(type);
-  }
-
-  public int getDeliveryStatus() {
-    return deliveryStatus;
-  }
-
-  public int getDeliveryReceiptCount() {
-    return deliveryReceiptCount;
-  }
-
-  public int getReadReceiptCount() {
-    return readReceiptCount;
-  }
-
-  public boolean isDelivered() {
-    if(recipient.getParticipants().size() == 0){
-      return (deliveryStatus >= SmsDatabase.Status.STATUS_COMPLETE &&
-              deliveryStatus < SmsDatabase.Status.STATUS_PENDING) || deliveryReceiptCount > 0;
-    }else
-      return (deliveryStatus >= SmsDatabase.Status.STATUS_COMPLETE &&
-              deliveryStatus < SmsDatabase.Status.STATUS_PENDING) || deliveryReceiptCount == (recipient.getParticipants().size()-1);
-  }
-
-  public boolean isRemoteRead() {
-    if(recipient.getParticipants().size() == 0){
-      return readReceiptCount > 0;
+        return false;
     }
 
-    if((recipient.getParticipants().size()-1) == deliveryReceiptCount)
-      return readReceiptCount>0 && readReceiptCount == deliveryReceiptCount;
-    return false;
-  }
+    public boolean isGroupQuit() {
+        return SmsDatabase.Types.isGroupQuit(type);
+    }
 
-  public boolean isPendingInsecureSmsFallback() {
-    return SmsDatabase.Types.isPendingInsecureSmsFallbackType(type);
-  }
+    public boolean isGroupAction() {
+        return isGroupUpdate() || isGroupQuit();
+    }
+
+    public boolean isExpirationTimerUpdate() {
+        return SmsDatabase.Types.isExpirationTimerUpdate(type);
+    }
+
+    public boolean isCallLog() {
+        return SmsDatabase.Types.isCallLog(type);
+    }
+
+    public boolean isJoined() {
+        return SmsDatabase.Types.isJoinedType(type);
+    }
+
+    public boolean isIncomingCall() {
+        return SmsDatabase.Types.isIncomingCall(type);
+    }
+
+    public boolean isOutgoingCall() {
+        return SmsDatabase.Types.isOutgoingCall(type);
+    }
+
+    public boolean isMissedCall() {
+        return SmsDatabase.Types.isMissedCall(type);
+    }
+
+    public boolean isVerificationStatusChange() {
+        return SmsDatabase.Types.isIdentityDefault(type) || SmsDatabase.Types.isIdentityVerified(type);
+    }
+
+    public int getDeliveryStatus() {
+        return deliveryStatus;
+    }
+
+    public int getDeliveryReceiptCount() {
+        return deliveryReceiptCount;
+    }
+
+    public int getReadReceiptCount() {
+        return readReceiptCount;
+    }
+
+    public boolean isDelivered() {
+        if (recipient.getParticipants().size() == 0) {
+            return (deliveryStatus >= SmsDatabase.Status.STATUS_COMPLETE &&
+                    deliveryStatus < SmsDatabase.Status.STATUS_PENDING) || deliveryReceiptCount > 0;
+        } else
+            return (deliveryStatus >= SmsDatabase.Status.STATUS_COMPLETE &&
+                    deliveryStatus < SmsDatabase.Status.STATUS_PENDING) || deliveryReceiptCount == (recipient.getParticipants().size() - 1);
+    }
+
+    public boolean isRemoteRead() {
+        if (recipient.getParticipants().size() == 0) {
+            return readReceiptCount > 0;
+        }
+
+        if ((recipient.getParticipants().size() - 1) == deliveryReceiptCount)
+            return readReceiptCount > 0 && readReceiptCount == deliveryReceiptCount;
+        return false;
+    }
+
+    public boolean isPendingInsecureSmsFallback() {
+        return SmsDatabase.Types.isPendingInsecureSmsFallbackType(type);
+    }
 
 
 }

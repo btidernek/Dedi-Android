@@ -52,6 +52,8 @@ public class DirectShareService extends ChooserTargetService {
 
       while ((record = reader.getNext()) != null && results.size() < 10) {
           Recipient recipient = Recipient.from(this, record.getRecipient().getAddress(), false);
+          if(recipient.isOnlyRead())
+              continue;
           String    name      = recipient.toShortString();
 
           Bitmap avatar;

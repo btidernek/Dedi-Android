@@ -47,113 +47,113 @@ import java.lang.ref.WeakReference;
  * Base activity container for selecting a list of contacts.
  *
  * @author Moxie Marlinspike
- *
  */
 public abstract class ContactSelectionActivity extends PassphraseRequiredActionBarActivity
-                                               implements SwipeRefreshLayout.OnRefreshListener,
-                                                          ContactSelectionListFragment.OnContactSelectedListener
-{
-  private static final String TAG = ContactSelectionActivity.class.getSimpleName();
+        implements SwipeRefreshLayout.OnRefreshListener,
+        ContactSelectionListFragment.OnContactSelectedListener {
+    private static final String TAG = ContactSelectionActivity.class.getSimpleName();
 
-  private final DynamicTheme dynamicTheme    = new DynamicNoActionBarTheme();
-  private final DynamicLanguage dynamicLanguage = new DynamicLanguage();
+    private final DynamicTheme dynamicTheme = new DynamicNoActionBarTheme();
+    private final DynamicLanguage dynamicLanguage = new DynamicLanguage();
 
-  protected ContactSelectionListFragment contactsFragment;
+    protected ContactSelectionListFragment contactsFragment;
 
-  private ContactFilterToolbar toolbar;
+    private ContactFilterToolbar toolbar;
 
-  @Override
-  protected void onPreCreate() {
-    dynamicTheme.onCreate(this);
-    dynamicLanguage.onCreate(this);
-  }
-
-  @Override
-  protected void onCreate(Bundle icicle, boolean ready) {
-    if (!getIntent().hasExtra(ContactSelectionListFragment.DISPLAY_MODE)) {
-      int displayMode = TextSecurePreferences.isSmsEnabled(this) ? ContactsCursorLoader.DisplayMode.FLAG_ALL
-                                                                 : ContactsCursorLoader.DisplayMode.FLAG_PUSH | ContactsCursorLoader.DisplayMode.FLAG_GROUPS;
-      getIntent().putExtra(ContactSelectionListFragment.DISPLAY_MODE, displayMode);
-    }
-
-    setContentView(R.layout.contact_selection_activity);
-
-    initializeToolbar();
-    initializeResources();
-    initializeSearch();
-  }
-
-  @Override
-  public void onResume() {
-    super.onResume();
-    dynamicTheme.onResume(this);
-    dynamicLanguage.onResume(this);
-  }
-
-  protected ContactFilterToolbar getToolbar() {
-    return toolbar;
-  }
-
-  private void initializeToolbar() {
-    this.toolbar = ViewUtil.findById(this, R.id.toolbar);
-    setSupportActionBar(toolbar);
-
-    assert  getSupportActionBar() != null;
-    getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-    getSupportActionBar().setDisplayShowTitleEnabled(false);
-    getSupportActionBar().setIcon(null);
-    getSupportActionBar().setLogo(null);
-  }
-
-  private void initializeResources() {
-    contactsFragment = (ContactSelectionListFragment) getSupportFragmentManager().findFragmentById(R.id.contact_selection_list_fragment);
-    contactsFragment.setOnContactSelectedListener(this);
-    contactsFragment.setOnRefreshListener(this);
-  }
-
-  private void initializeSearch() {
-    toolbar.setOnFilterChangedListener(filter -> contactsFragment.setQueryFilter(filter));
-  }
-
-  @Override
-  public void onRefresh() {
-    new RefreshDirectoryTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getApplicationContext());
-  }
-
-  @Override
-  public void onContactSelected(String number) {}
-
-  @Override
-  public void onContactDeselected(String number) {}
-
-  private static class RefreshDirectoryTask extends AsyncTask<Context, Void, Void> {
-
-    private final WeakReference<ContactSelectionActivity> activity;
-
-    private RefreshDirectoryTask(ContactSelectionActivity activity) {
-      this.activity = new WeakReference<>(activity);
+    @Override
+    protected void onPreCreate() {
+        dynamicTheme.onCreate(this);
+        dynamicLanguage.onCreate(this);
     }
 
     @Override
-    protected Void doInBackground(Context... params) {
+    protected void onCreate(Bundle icicle, boolean ready) {
+        if (!getIntent().hasExtra(ContactSelectionListFragment.DISPLAY_MODE)) {
+            int displayMode = TextSecurePreferences.isSmsEnabled(this) ? ContactsCursorLoader.DisplayMode.FLAG_ALL
+                    : ContactsCursorLoader.DisplayMode.FLAG_PUSH | ContactsCursorLoader.DisplayMode.FLAG_GROUPS;
+            getIntent().putExtra(ContactSelectionListFragment.DISPLAY_MODE, displayMode);
+        }
 
-      try {
-        DirectoryHelper.refreshDirectory(params[0], true);
-      } catch (IOException e) {
-        Log.w(TAG, e);
-      }
+        setContentView(R.layout.contact_selection_activity);
 
-      return null;
+        initializeToolbar();
+        initializeResources();
+        initializeSearch();
     }
 
     @Override
-    protected void onPostExecute(Void result) {
-      ContactSelectionActivity activity = this.activity.get();
-
-      if (activity != null && !activity.isFinishing()) {
-        activity.toolbar.clear();
-        activity.contactsFragment.resetQueryFilter();
-      }
+    public void onResume() {
+        super.onResume();
+        dynamicTheme.onResume(this);
+        dynamicLanguage.onResume(this);
     }
-  }
+
+    protected ContactFilterToolbar getToolbar() {
+        return toolbar;
+    }
+
+    private void initializeToolbar() {
+        this.toolbar = ViewUtil.findById(this, R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        assert getSupportActionBar() != null;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setIcon(null);
+        getSupportActionBar().setLogo(null);
+    }
+
+    private void initializeResources() {
+        contactsFragment = (ContactSelectionListFragment) getSupportFragmentManager().findFragmentById(R.id.contact_selection_list_fragment);
+        contactsFragment.setOnContactSelectedListener(this);
+        contactsFragment.setOnRefreshListener(this);
+    }
+
+    private void initializeSearch() {
+        toolbar.setOnFilterChangedListener(filter -> contactsFragment.setQueryFilter(filter));
+    }
+
+    @Override
+    public void onRefresh() {
+        new RefreshDirectoryTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getApplicationContext());
+    }
+
+    @Override
+    public void onContactSelected(String number) {
+    }
+
+    @Override
+    public void onContactDeselected(String number) {
+    }
+
+    private static class RefreshDirectoryTask extends AsyncTask<Context, Void, Void> {
+
+        private final WeakReference<ContactSelectionActivity> activity;
+
+        private RefreshDirectoryTask(ContactSelectionActivity activity) {
+            this.activity = new WeakReference<>(activity);
+        }
+
+        @Override
+        protected Void doInBackground(Context... params) {
+
+            try {
+                DirectoryHelper.refreshDirectory(params[0], true);
+            } catch (IOException e) {
+                Log.w(TAG, e);
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            ContactSelectionActivity activity = this.activity.get();
+
+            if (activity != null && !activity.isFinishing()) {
+                activity.toolbar.clear();
+                activity.contactsFragment.resetQueryFilter();
+            }
+        }
+    }
 }

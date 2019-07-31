@@ -8,9 +8,38 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:853247069301:android:3c641926cadee83a",
+        "mobilesdk_app_id": "1:853247069301:android:d0b6c63a8e2461b2",
         "android_client_info": {
           "package_name": "org.btider.dediapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "853247069301-3sofu9i99i17rkue0f9mo8dtv2daapv1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOPHL5gkupF6LPiWVOaHJI50jv8Lpa39E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "853247069301-3sofu9i99i17rkue0f9mo8dtv2daapv1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:853247069301:android:3c641926cadee83a",
+        "android_client_info": {
+          "package_name": "tr.gov.btk.secure"
         }
       },
       "oauth_client": [
@@ -18,13 +47,9 @@
           "client_id": "853247069301-641ep3pdnvbm4utcudlkrq27kvskappp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "org.btider.dediapp",
+            "package_name": "tr.gov.btk.secure",
             "certificate_hash": "36125c9d85641af25477cbc7f2b333d862379680"
           }
-        },
-        {
-          "client_id": "853247069301-3sofu9i99i17rkue0f9mo8dtv2daapv1.apps.googleusercontent.com",
-          "client_type": 3
         },
         {
           "client_id": "853247069301-3sofu9i99i17rkue0f9mo8dtv2daapv1.apps.googleusercontent.com",
@@ -37,20 +62,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
               "client_id": "853247069301-3sofu9i99i17rkue0f9mo8dtv2daapv1.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }

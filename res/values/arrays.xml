@@ -237,7 +237,6 @@
 
     <array name="incoming_call_widget_targets">
         <item>@drawable/redphone_ic_lockscreen_answer</item>
-        <!--         <item>@drawable/ic_lockscreen_send_sms</item> -->
         <item>@null</item>
         <item>@drawable/redphone_ic_lockscreen_decline</item>
         <item>@null</item>

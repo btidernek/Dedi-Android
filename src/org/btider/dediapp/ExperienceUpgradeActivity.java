@@ -1,6 +1,7 @@
 package org.btider.dediapp;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -17,6 +18,7 @@ import android.util.Log;
 import com.melnykov.fab.FloatingActionButton;
 import com.nineoldandroids.animation.ArgbEvaluator;
 
+import org.btider.dediapp.notifications.NotificationChannels;
 import org.btider.dediapp.util.ServiceUtil;
 import org.btider.dediapp.util.TextSecurePreferences;
 import org.btider.dediapp.util.Util;
@@ -226,7 +228,7 @@ public class ExperienceUpgradeActivity extends BaseActionBarActivity {
         if (TextSecurePreferences.getLastExperienceVersionCode(context) < 339 &&
             !TextSecurePreferences.isPasswordDisabled(context))
         {
-          Notification notification = new NotificationCompat.Builder(context)
+          Notification notification = new NotificationCompat.Builder(context, NotificationChannels.OTHER)
               .setSmallIcon(R.drawable.icon_notification)
               .setColor(context.getResources().getColor(R.color.signal_primary))
               .setContentTitle(context.getString(R.string.ExperienceUpgradeActivity_unlock_to_complete_update))
@@ -255,7 +257,7 @@ public class ExperienceUpgradeActivity extends BaseActionBarActivity {
         Intent dismissIntent = new Intent(context, AppUpgradeReceiver.class);
         dismissIntent.setAction(DISMISS_ACTION);
 
-        Notification notification = new NotificationCompat.Builder(context)
+        Notification notification = new NotificationCompat.Builder(context,NotificationChannels.OTHER)
                                         .setSmallIcon(R.drawable.icon_notification)
                                         .setColor(context.getResources().getColor(R.color.signal_primary))
                                         .setContentTitle(context.getString(experienceUpgrade.get().getNotificationTitle()))

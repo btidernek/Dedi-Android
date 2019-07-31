@@ -18,6 +18,7 @@
 package org.btider.dediapp.recipients;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -46,6 +47,7 @@ import org.btider.dediapp.database.RecipientDatabase.VibrateState;
 import org.btider.dediapp.recipients.RecipientProvider.RecipientDetails;
 import org.btider.dediapp.util.FutureTaskListener;
 import org.btider.dediapp.util.ListenableFutureTask;
+import org.btider.dediapp.util.TextSecurePreferences;
 import org.btider.dediapp.util.Util;
 import org.whispersystems.libsignal.util.guava.Optional;
 
@@ -91,15 +93,22 @@ public class Recipient implements RecipientModifiedListener {
   private @Nullable String         profileAvatar;
   private           boolean        profileSharing;
 
+  private           boolean         onlyRead;
+  private           String          serviceWebColor;
+
+
+  public static Context context;
 
   @SuppressWarnings("ConstantConditions")
   public static @NonNull Recipient from(@NonNull Context context, @NonNull Address address, boolean asynchronous) {
+    Recipient.context = context;
     if (address == null) throw new AssertionError(address);
     return provider.getRecipient(context, address, Optional.absent(), Optional.absent(), asynchronous);
   }
 
   @SuppressWarnings("ConstantConditions")
   public static @NonNull Recipient from(@NonNull Context context, @NonNull Address address, @NonNull Optional<RecipientSettings> settings, @NonNull Optional<GroupDatabase.GroupRecord> groupRecord, boolean asynchronous) {
+    Recipient.context = context;
     if (address == null) throw new AssertionError(address);
     return provider.getRecipient(context, address, settings, groupRecord, asynchronous);
   }
@@ -141,6 +150,8 @@ public class Recipient implements RecipientModifiedListener {
       this.profileSharing        = stale.profileSharing;
       this.participants.clear();
       this.participants.addAll(stale.participants);
+      this.onlyRead               =stale.onlyRead;
+      this.serviceWebColor        =stale.serviceWebColor;
     }
 
     if (details.isPresent()) {
@@ -164,6 +175,9 @@ public class Recipient implements RecipientModifiedListener {
       this.profileSharing        = details.get().profileSharing;
       this.participants.clear();
       this.participants.addAll(details.get().participants);
+
+      this.onlyRead             =false;
+      this.serviceWebColor      ="#999999";
     }
 
     future.addListener(new FutureTaskListener<RecipientProvider.RecipientDetails>() {
@@ -196,6 +210,9 @@ public class Recipient implements RecipientModifiedListener {
             Recipient.this.participants.clear();
             Recipient.this.participants.addAll(result.participants);
             Recipient.this.resolving = false;
+
+            Recipient.this.onlyRead =false;
+            Recipient.this.serviceWebColor="#999999";
 
             if (!listeners.isEmpty()) {
               for (Recipient recipient : participants) recipient.addListener(Recipient.this);
@@ -239,6 +256,9 @@ public class Recipient implements RecipientModifiedListener {
     this.profileSharing        = details.profileSharing;
     this.participants.addAll(details.participants);
     this.resolving    = false;
+
+    this.onlyRead =false;
+    this.serviceWebColor = "#999999";
   }
 
   public synchronized @Nullable Uri getContactUri() {
@@ -259,6 +279,15 @@ public class Recipient implements RecipientModifiedListener {
   }
 
   public synchronized @Nullable String getName() {
+
+    if(address.isPhone()) {
+      String ss = TextSecurePreferences.getServiceProductPreferencee(context, address.toPhoneString(), null);
+      if (ss != null) {
+        String[] data = ss.split(",");
+        return data[0];
+      }
+    }
+
     if (this.name == null && isMmsGroupRecipient()) {
       List<String> names = new LinkedList<>();
 
@@ -305,6 +334,14 @@ public class Recipient implements RecipientModifiedListener {
   }
 
   public synchronized @Nullable String getCustomLabel() {
+
+    if(address.isPhone()) {
+      String ss = TextSecurePreferences.getServiceProductPreferencee(context, address.toPhoneString(), null);
+      if (ss != null) {
+        return "";
+      }
+    }
+
     return customLabel;
   }
 
@@ -317,6 +354,9 @@ public class Recipient implements RecipientModifiedListener {
         notify = true;
       }
     }
+
+
+
 
     if (notify) notifyListeners();
   }
@@ -334,6 +374,14 @@ public class Recipient implements RecipientModifiedListener {
   }
 
   public synchronized @Nullable String getProfileName() {
+
+    if(address.isPhone()) {
+      String ss = TextSecurePreferences.getServiceProductPreferencee(context, address.toPhoneString(), null);
+      if (ss != null) {
+        return "";
+      }
+    }
+
     return profileName;
   }
 
@@ -562,6 +610,14 @@ public class Recipient implements RecipientModifiedListener {
   }
 
   public synchronized RegisteredState getRegistered() {
+
+    if(address.isPhone()) {
+      String ss = TextSecurePreferences.getServiceProductPreferencee(context, address.toPhoneString(), null);
+      if (ss != null) {
+        return RegisteredState.REGISTERED;
+      }
+    }
+
     if      (isPushGroupRecipient()) return RegisteredState.REGISTERED;
     else if (isMmsGroupRecipient())  return RegisteredState.NOT_REGISTERED;
 
@@ -594,6 +650,14 @@ public class Recipient implements RecipientModifiedListener {
   }
 
   public synchronized boolean isSystemContact() {
+    if(address.isPhone()) {
+      String ss = TextSecurePreferences.getServiceProductPreferencee(context, address.toPhoneString(), null);
+      if (ss != null) {
+        return true;
+      }
+    }
+
+
     return contactUri != null;
   }
 
@@ -639,4 +703,25 @@ public class Recipient implements RecipientModifiedListener {
   }
 
 
+  public boolean isOnlyRead() {
+    if(address.isPhone()) {
+      String ss = TextSecurePreferences.getServiceProductPreferencee(context, address.toPhoneString(), null);
+      if (ss != null) {
+        return true;
+      }
+    }
+
+    return onlyRead;
+  }
+
+  public String getServiceWebColor() {
+    if(address.isPhone()) {
+      String ss = TextSecurePreferences.getServiceProductPreferencee(context, address.toPhoneString(), null);
+      if (ss != null) {
+        String[] s = ss.split(",");
+        return s[1];
+      }
+    }
+    return serviceWebColor;
+  }
 }

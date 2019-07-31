@@ -25,6 +25,10 @@ import org.btider.dediapp.recipients.Recipient;
 import org.btider.dediapp.util.TextSecurePreferences;
 import org.btider.dediapp.util.ViewUtil;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 public class ConversationTitleView extends RelativeLayout {
 
   @SuppressWarnings("unused")
@@ -126,6 +130,8 @@ public class ConversationTitleView extends RelativeLayout {
   private void setNonContactRecipientTitle(Recipient recipient) {
     this.title.setText(recipient.getAddress().serialize());
 
+    //this.title.setText("MUHTAR");
+
     if (TextUtils.isEmpty(recipient.getProfileName())) {
       this.subtitle.setText(null);
       this.subtitle.setVisibility(View.GONE);
@@ -137,6 +143,8 @@ public class ConversationTitleView extends RelativeLayout {
 
   private void setContactRecipientTitle(Recipient recipient) {
     this.title.setText(recipient.getName());
+
+    //this.title.setText("MUHTAR");
 
     if (recipient.getCustomLabel() != null) this.subtitle.setText(recipient.getCustomLabel());
     else                                    this.subtitle.setText(recipient.getAddress().serialize());

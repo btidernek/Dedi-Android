@@ -18,6 +18,7 @@ package org.btider.dediapp.notifications;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -33,6 +34,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.service.notification.StatusBarNotification;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -288,8 +290,12 @@ public class MessageNotifier {
                                                    @NonNull  NotificationState notificationState,
                                                    boolean signal, boolean bundled)
   {
+
+    Log.i(TAG, "sendSingleThreadNotification()  signal: " + signal + "  bundled: " + bundled);
+
     if (notificationState.getNotifications().isEmpty()) {
       if (!bundled) cancelActiveNotifications(context);
+      Log.i(TAG, "Empty notification state. Skipping.");
       return;
     }
 
@@ -298,7 +304,6 @@ public class MessageNotifier {
     Recipient                          recipient      = notifications.get(0).getRecipient();
     int                                notificationId = (int) (SUMMARY_NOTIFICATION_ID + (bundled ? notifications.get(0).getThreadId() : 0));
 
-
     builder.setThread(notifications.get(0).getRecipient());
     builder.setMessageCount(notificationState.getMessageCount());
     builder.setPrimaryMessageBody(recipient, notifications.get(0).getIndividualRecipient(),
@@ -306,6 +311,8 @@ public class MessageNotifier {
     builder.setContentIntent(notifications.get(0).getPendingIntent(context));
     builder.setGroup(NOTIFICATION_GROUP);
     builder.setDeleteIntent(notificationState.getDeleteIntent(context));
+    builder.setOnlyAlertOnce(!signal);
+    builder.setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY);
 
     long timestamp = notifications.get(0).getTimestamp();
     if (timestamp != 0) builder.setWhen(timestamp);
@@ -334,13 +341,17 @@ public class MessageNotifier {
       builder.setGroupSummary(true);
     }
 
-    NotificationManagerCompat.from(context).notify(notificationId, builder.build());
+    Notification notification = builder.build();
+    NotificationManagerCompat.from(context).notify(notificationId, notification);
+    Log.i(TAG, "Posted notification. " + notification.toString());
   }
 
   private static void sendMultipleThreadNotification(@NonNull  Context context,
                                                      @NonNull  NotificationState notificationState,
                                                      boolean signal)
   {
+    Log.i(TAG, "sendSingleThreadNotification()  signal: " + signal);
+
     MultipleRecipientNotificationBuilder builder       = new MultipleRecipientNotificationBuilder(context, TextSecurePreferences.getNotificationPrivacy(context));
     List<NotificationItem>               notifications = notificationState.getNotifications();
 
@@ -348,6 +359,8 @@ public class MessageNotifier {
     builder.setMostRecentSender(notifications.get(0).getIndividualRecipient());
     builder.setGroup(NOTIFICATION_GROUP);
     builder.setDeleteIntent(notificationState.getDeleteIntent(context));
+    builder.setOnlyAlertOnce(!signal);
+    builder.setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY);
 
     long timestamp = notifications.get(0).getTimestamp();
     if (timestamp != 0) builder.setWhen(timestamp);
@@ -367,7 +380,9 @@ public class MessageNotifier {
                         notifications.get(0).getText());
     }
 
+    Notification notification = builder.build();
     NotificationManagerCompat.from(context).notify(SUMMARY_NOTIFICATION_ID, builder.build());
+    Log.i(TAG, "Posted notification. " + notification.toString());
   }
 
   private static void sendInThreadNotification(Context context, Recipient recipient) {
@@ -377,7 +392,10 @@ public class MessageNotifier {
       return;
     }
 
-    Uri uri = recipient != null ? recipient.resolve().getMessageRingtone() : null;
+    Uri uri = null;
+    if (recipient != null) {
+      uri = NotificationChannels.supported() ? recipient.resolve().getMessageRingtone() : recipient.getMessageRingtone();
+    }
 
     if (uri == null) {
       uri = TextSecurePreferences.getNotificationRingtone(context);

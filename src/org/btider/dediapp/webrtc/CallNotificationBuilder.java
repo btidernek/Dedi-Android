@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.app.NotificationCompat;
 
+import org.btider.dediapp.notifications.NotificationChannels;
 import org.btider.dediapp.recipients.Recipient;
 import org.btider.dediapp.service.WebRtcCallService;
 import org.btider.dediapp.R;
@@ -40,7 +41,7 @@ public class CallNotificationBuilder {
 
     PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, contentIntent, 0);
 
-    NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+    NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NotificationChannels.OTHER)
         .setSmallIcon(R.drawable.ic_call_secure_white_24dp)
         .setContentIntent(pendingIntent)
         .setOngoing(true)

@@ -287,7 +287,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     private TextView charactersLeft;
     private ConversationFragment fragment;
     private Button unblockButton;
-    private Button makeDefaultSmsButton;
+    //private Button makeDefaultSmsButton;
     private Button registerButton;
     private InputAwareLayout container;
     private View composePanel;
@@ -642,6 +642,9 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
         MenuInflater inflater = this.getMenuInflater();
         menu.clear();
 
+        if(recipient.isOnlyRead())
+            return false;
+
         if (isSecureText) {
             if (recipient.getExpireMessages() > 0) {
                 inflater.inflate(R.menu.conversation_expiring_on, menu);
@@ -850,6 +853,9 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     }
 
     private void handleConversationSettings() {
+        if(recipient.isOnlyRead())
+            return;
+
         Intent intent = new Intent(ConversationActivity.this, RecipientPreferenceActivity.class);
         intent.putExtra(RecipientPreferenceActivity.ADDRESS_EXTRA, recipient.getAddress());
         intent.putExtra(RecipientPreferenceActivity.CAN_HAVE_SAFETY_NUMBER_EXTRA,
@@ -1135,6 +1141,9 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     }
 
     private boolean handleDisplayQuickContact() {
+        if(recipient.isOnlyRead())
+            return false;
+
         if (recipient.getAddress().isGroup()) return false;
 
         if (recipient.getContactUri() != null) {
@@ -1225,7 +1234,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
         boolean isMediaMessage = recipient.isMmsGroupRecipient() || attachmentManager.isAttachmentPresent();
 
         sendButton.resetAvailableTransports(isMediaMessage);
-
+        sendButton.setDefaultTransport(Type.TEXTSECURE);
         if (!isSecureText && !isPushGroupConversation())
             sendButton.disableTransport(Type.TEXTSECURE);
         if (recipient.isPushGroupRecipient()) sendButton.disableTransport(Type.SMS);
@@ -1505,7 +1514,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
         charactersLeft = ViewUtil.findById(this, R.id.space_left);
         emojiDrawerStub = ViewUtil.findStubById(this, R.id.emoji_drawer_stub);
         unblockButton = ViewUtil.findById(this, R.id.unblock_button);
-        makeDefaultSmsButton = ViewUtil.findById(this, R.id.make_default_sms_button);
+        //makeDefaultSmsButton = ViewUtil.findById(this, R.id.make_default_sms_button);
         registerButton = ViewUtil.findById(this, R.id.register_button);
         composePanel = ViewUtil.findById(this, R.id.bottom_panel);
         container = ViewUtil.findById(this, R.id.layout_container);
@@ -1539,7 +1548,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
 
         composeText.setOnEditorActionListener(sendButtonListener);
         attachButton.setOnClickListener(new AttachButtonListener());
-        attachButton.setOnLongClickListener(new AttachButtonLongClickListener());
+//        attachButton.setOnLongClickListener(new AttachButtonLongClickListener());
         sendButton.setOnClickListener(sendButtonListener);
         sendButton.setEnabled(true);
         sendButton.addOnTransportChangedListener((newTransport, manuallySelected) -> {
@@ -1555,7 +1564,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
         titleView.setOnLongClickListener(v -> handleDisplayQuickContact());
         titleView.setOnBackClickedListener(view -> super.onBackPressed());
         unblockButton.setOnClickListener(v -> handleUnblock());
-        makeDefaultSmsButton.setOnClickListener(v -> handleMakeDefaultSms());
+        //makeDefaultSmsButton.setOnClickListener(v -> handleMakeDefaultSms());
         registerButton.setOnClickListener(v -> handleRegisterForSignal());
 
         composeText.setOnKeyListener(composeKeyPressedListener);
@@ -1857,29 +1866,39 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
         if (supportActionBar == null) throw new AssertionError();
         supportActionBar.setBackgroundDrawable(new ColorDrawable(color.toActionBarColor(this)));
         setStatusBarColor(color.toStatusBarColor(this));
+
+        //MUHTAR
+        if(recipient.isOnlyRead()){
+            supportActionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(recipient.getServiceWebColor())));
+            setStatusBarColor(Color.parseColor(recipient.getServiceWebColor()));
+        }
     }
 
     private void setBlockedUserState(Recipient recipient, boolean isSecureText, boolean isDefaultSms) {
         if (recipient.isBlocked()) {
             unblockButton.setVisibility(View.VISIBLE);
             composePanel.setVisibility(View.GONE);
-            makeDefaultSmsButton.setVisibility(View.GONE);
+//            makeDefaultSmsButton.setVisibility(View.GONE);
             registerButton.setVisibility(View.GONE);
         } else if (!isSecureText && isPushGroupConversation()) {
             unblockButton.setVisibility(View.GONE);
             composePanel.setVisibility(View.GONE);
-            makeDefaultSmsButton.setVisibility(View.GONE);
+//            makeDefaultSmsButton.setVisibility(View.GONE);
             registerButton.setVisibility(View.VISIBLE);
         } else if (!isSecureText && !isDefaultSms) {
             unblockButton.setVisibility(View.GONE);
             composePanel.setVisibility(View.GONE);
-            makeDefaultSmsButton.setVisibility(View.VISIBLE);
+//            makeDefaultSmsButton.setVisibility(View.VISIBLE);
             registerButton.setVisibility(View.GONE);
         } else {
             composePanel.setVisibility(View.VISIBLE);
             unblockButton.setVisibility(View.GONE);
-            makeDefaultSmsButton.setVisibility(View.GONE);
+            //makeDefaultSmsButton.setVisibility(View.GONE);
             registerButton.setVisibility(View.GONE);
+        }
+
+        if(recipient.isOnlyRead()){
+            composePanel.setVisibility(View.GONE);
         }
     }
 
@@ -2117,6 +2136,12 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
     }
 
     private ListenableFuture<Void> sendMediaMessage(final boolean forceSms, String body, SlideDeck slideDeck, List<Contact> contacts, final long expiresIn, final int subscriptionId, final boolean initiating) {
+        if (!isDefaultSms && (!isSecureText || forceSms)) {
+            showDefaultSmsPrompt();
+            SettableFuture<Void> future = new SettableFuture<>();
+            future.set(null);
+            return future;
+        }
         OutgoingMediaMessage outgoingMessageCandidate = new OutgoingMediaMessage(recipient, slideDeck, body, System.currentTimeMillis(), subscriptionId, expiresIn, distributionType, inputPanel.getQuote().orNull(), contacts);
 
         final SettableFuture<Void> future = new SettableFuture<>();
@@ -2130,41 +2155,38 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
             outgoingMessage = outgoingMessageCandidate;
         }
 
-        Permissions.with(this)
-                .request(Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS)
-                .ifNecessary(!isSecureText || forceSms)
-                .withPermanentDenialDialog(getString(R.string.ConversationActivity_signal_needs_sms_permission_in_order_to_send_an_sms))
-                .onAllGranted(() -> {
-                    inputPanel.clearQuote();
-                    attachmentManager.clear(glideRequests, false);
-                    composeText.setText("");
-                    final long id = fragment.stageOutgoingMessage(outgoingMessage);
+        inputPanel.clearQuote();
+        attachmentManager.clear(glideRequests, false);
+        composeText.setText("");
+        final long id = fragment.stageOutgoingMessage(outgoingMessage);
 
-                    new AsyncTask<Void, Void, Long>() {
-                        @Override
-                        protected Long doInBackground(Void... param) {
-                            if (initiating) {
-                                DatabaseFactory.getRecipientDatabase(context).setProfileSharing(recipient, true);
-                            }
+        new AsyncTask<Void, Void, Long>() {
+            @Override
+            protected Long doInBackground(Void... param) {
+                if (initiating) {
+                    DatabaseFactory.getRecipientDatabase(context).setProfileSharing(recipient, true);
+                }
 
-                            return MessageSender.send(context, outgoingMessage, threadId, forceSms, () -> fragment.releaseOutgoingMessage(id));
-                        }
+                return MessageSender.send(context, outgoingMessage, threadId, forceSms, () -> fragment.releaseOutgoingMessage(id));
+            }
 
-                        @Override
-                        protected void onPostExecute(Long result) {
-                            sendComplete(result);
-                            future.set(null);
-                        }
-                    }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                })
-                .onAnyDenied(() -> future.set(null))
-                .execute();
+            @Override
+            protected void onPostExecute(Long result) {
+                sendComplete(result);
+                future.set(null);
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
 
         return future;
     }
 ///this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     private void sendTextMessage(final boolean forceSms, final long expiresIn, final int subscriptionId, final boolean initiatingConversation)
             throws InvalidMessageException {
+        if (!isDefaultSms && (!isSecureText || forceSms)) {
+            showDefaultSmsPrompt();
+            return;
+        }
         final Context context = getApplicationContext();
         final String messageBody = getMessage();
 
@@ -2176,32 +2198,32 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
             message = new OutgoingTextMessage(recipient, messageBody, expiresIn, subscriptionId);
         }
 
-        Permissions.with(this)
-                .request(Manifest.permission.SEND_SMS)
-                .ifNecessary(forceSms || !isSecureText)
-                .withPermanentDenialDialog(getString(R.string.ConversationActivity_signal_needs_sms_permission_in_order_to_send_an_sms))
-                .onAllGranted(() -> {
-                    this.composeText.setText("");
-                    final long id = fragment.stageOutgoingMessage(message);
+        this.composeText.setText("");
+        final long id = fragment.stageOutgoingMessage(message);
 
-                    new AsyncTask<OutgoingTextMessage, Void, Long>() {
-                        @Override
-                        protected Long doInBackground(OutgoingTextMessage... messages) {
-                            if (initiatingConversation) {
-                                DatabaseFactory.getRecipientDatabase(context).setProfileSharing(recipient, true);
-                            }
+        new AsyncTask<OutgoingTextMessage, Void, Long>() {
+            @Override
+            protected Long doInBackground(OutgoingTextMessage... messages) {
+                if (initiatingConversation) {
+                    DatabaseFactory.getRecipientDatabase(context).setProfileSharing(recipient, true);
+                }
 
-                            return MessageSender.send(context, messages[0], threadId, forceSms, () -> fragment.releaseOutgoingMessage(id));
-                        }
+                return MessageSender.send(context, messages[0], threadId, forceSms, () -> fragment.releaseOutgoingMessage(id));
+            }
 
-                        @Override
-                        protected void onPostExecute(Long result) {
-                            sendComplete(result);
-                        }
-                    }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, message);
+            @Override
+            protected void onPostExecute(Long result) {
+                sendComplete(result);
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, message);
+    }
 
-                })
-                .execute();
+    private void showDefaultSmsPrompt() {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.ConversationActivity_signal_cannot_sent_sms_mms_messages_because_it_is_not_your_default_sms_app)
+                .setNegativeButton(R.string.ConversationActivity_no, (dialog, which) -> dialog.dismiss())
+                .setPositiveButton(R.string.ConversationActivity_yes, (dialog, which) -> handleMakeDefaultSms())
+                .show();
     }
 
     private void updateToggleButtonState() {

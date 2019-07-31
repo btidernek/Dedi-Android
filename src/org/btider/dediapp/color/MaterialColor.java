@@ -28,18 +28,19 @@ public enum MaterialColor {
   BROWN      (R.color.brown_500,       R.color.brown_700,       R.color.brown_700,       R.color.brown_900,       "brown"),
   GREY       (R.color.grey_500,        R.color.grey_700,        R.color.grey_700,        R.color.grey_900,        "grey"),
   BLUE_GREY  (R.color.blue_grey_500,   R.color.blue_grey_700,   R.color.blue_grey_700,   R.color.blue_grey_900,   "blue_grey"),
-
   GROUP      (GREY.conversationColorLight, R.color.textsecure_primary, R.color.textsecure_primary_dark,
               GREY.conversationColorDark, R.color.gray95, R.color.black,
               "group_color");
 
-  private final int conversationColorLight;
-  private final int actionBarColorLight;
-  private final int statusBarColorLight;
-  private final int conversationColorDark;
-  private final int actionBarColorDark;
-  private final int statusBarColorDark;
-  private final String serialized;
+
+
+  private int conversationColorLight;
+  private int actionBarColorLight;
+  private int statusBarColorLight;
+  private int conversationColorDark;
+  private int actionBarColorDark;
+  private int statusBarColorDark;
+  private String serialized;
 
   MaterialColor(int conversationColorLight, int actionBarColorLight,
                 int statusBarColorLight, int conversationColorDark,
@@ -56,11 +57,12 @@ public enum MaterialColor {
   }
 
   MaterialColor(int lightColor, int darkColor,
-                int lightStatusBarColor, int darkStatusBarColor, String serialized)
+                       int lightStatusBarColor, int darkStatusBarColor, String serialized)
   {
     this(lightColor, lightColor, lightStatusBarColor,
          darkColor, darkColor, darkStatusBarColor, serialized);
   }
+
 
   public int toConversationColor(@NonNull Context context) {
     return context.getResources().getColor(isDarkTheme(context) ? conversationColorDark
@@ -146,5 +148,15 @@ public enum MaterialColor {
       super(message);
     }
   }
+
+    public MaterialColor getColor(String color) throws UnknownColorException {
+      this.conversationColorLight = Color.parseColor(color);
+        this.actionBarColorLight = Color.parseColor(color);
+        this.statusBarColorLight = Color.parseColor(color);
+        this.conversationColorDark = Color.parseColor(color);
+        this.actionBarColorDark = Color.parseColor(color);
+        this.statusBarColorDark = Color.parseColor(color);
+        return this;
+    }
 
 }

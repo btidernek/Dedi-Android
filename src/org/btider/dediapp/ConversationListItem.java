@@ -87,7 +87,7 @@ public class ConversationListItem extends RelativeLayout
   private long               threadId;
   private GlideRequests      glideRequests;
   private TextView           subjectView;
-  private FromTextView fromView;
+  private FromTextView fromView;  //BU liste ekranındaki ismi!
   private TextView           dateView;
   private TextView           archivedView;
   private DeliveryStatusView deliveryStatusIndicator;
